@@ -1,4 +1,3 @@
 User-Agent:*
-Disallow: /work/
-
-Sitemap:https://test1.npca.jp/sitemap.xml
+Allow: /
+Sitemap:https://www.npca.jp/sitemap.xml

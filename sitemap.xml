@@ -1,28 +1,256 @@
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
 
 <url>
-<loc>https://test1.npca.jp/</loc>
-<lastmod>2022-04-18T13:27:16+00:00</lastmod>
-<priority>1.00</priority>
+  <loc>https://www.npca.jp/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
 </url>
 <url>
-<loc>https://test1.npca.jp/about/</loc>
-<lastmod>2022-04-18T13:27:16+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.npca.jp/about/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
 </url>
 <url>
-<loc>https://test1.npca.jp/activity/</loc>
-<lastmod>2022-04-18T13:27:16+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.npca.jp/activity/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
 </url>
 <url>
-<loc>https://test1.npca.jp/record/</loc>
-<lastmod>2022-04-18T13:27:16+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.npca.jp/record/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
 </url>
 <url>
-<loc>https://test1.npca.jp/work/</loc>
-<lastmod>2022-04-18T13:27:16+00:00</lastmod>
-<priority>0.80</priority>
+  <loc>https://www.npca.jp/works/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
 </url>
+<url>
+  <loc>https://www.npca.jp/agreements/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2021/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/works/magazine/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/works/program/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/works/website/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2021/Sugsugar</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2021/Chito</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2021/sashiming</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2021/watcol</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2021/maguro</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2021/hinata</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2021/UltimateBlacktea</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2021/PCT</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/predef</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/object_1037</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/sashiming</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/sarugami</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/ficorajo</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/Hiro</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/motty</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/takepan</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/kuro</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/kusafukakota</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/2lu3</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/harady</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/cobalt</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/RLtdExp</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/mafusuke</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/neko</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/uraoz</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/hinata</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2019/postdef</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/works/about/</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/predef</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/object_1037</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/2lu3</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/hinata</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/harady</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/taizo0122</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/takepan</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/kota1024</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/niimi</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/physics0523</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2018/postdef</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/predef</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/object_1037</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/physics</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/taizo0122</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/2lu3</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/niini</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/enptukezuri</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/hinata</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+<url>
+  <loc>https://www.npca.jp/magazine/2017/postdef</loc>
+  <lastmod>2022-05-01T16:56:59+00:00</lastmod>
+</url>
+
+
 </urlset>
