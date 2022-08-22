@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4970457-1"></script>
+  <script>
+    if (document.domain === 'www.npca.jp') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-4970457-1');
+    }
+  </script>
+  <script type="text/javascript" id="MathJax-script" async="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="next" title="レシート記述言語で遊ぶ" href="stranger_86952.html"><link rel="prev" title="応用情報技術者試験の対策について" href="sug.html">  <meta name="generator" content="Re:VIEW" />
+  <title>初めてのwebアプリ作成 | 灘校パソコン研究部部誌2022</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="book">
+    <nav class="side-content">
+      <h1>灘校パソコン研究部部誌2022</h1>
+      <ul class="book-toc">
+<li><a href="index.html">TOP</a></li>
+<li><a href="dekabutsu.html">第1章　TOTPをC#で生成する</a></li>
+<li><a href="chito.html">第2章　ゼロから作る量子コンピューター</a></li>
+<li><a href="maguro.html">第3章　i3 window managerを使ってみよう</a></li>
+<li><a href="sug.html">第4章　応用情報技術者試験の対策について</a></li>
+<li><a href="nisnah.html">第5章　初めてのwebアプリ作成</a></li>
+<li><a href="stranger_86952.html">第6章　レシート記述言語で遊ぶ</a></li>
+<li><a href="kentand.html">第7章　たのしいビット・二分探索アルゴリズムの世界</a></li>
+<li><a href="tea.html">第8章　万年カレンダーを実装する</a></li>
+</ul>
+      <p class="review-signature">powered by <a href="http://reviewml.org/">Re:VIEW</a></p>
+    </nav>
+    <div class="book-body">
+      <header>
+      </header>
+      <div class="book-page">
+        <h1><a id="h5"></a><span class="secno">第5章　</span>初めてのwebアプリ作成</h1>
+<p><p style="text-align:right">78回生 nisnah</p></p>
+
+<h2><a id="h5-1"></a><span class="secno">5.1　</span>挨拶</h2>
+<p>78回生のnisnahです。気づけばもう学校生活の1/3が終わっていました。時の流れってはやいですね。それなのにまだあまり進捗が生やせていないことに焦りを感じています。そこで、webアプリというものを作ってみます。</p>
+
+<h3><a id="h5-1-1"></a>お詫び</h3>
+<p>今回は、私の技術と時間が足りず、最後まで作り切ることはできませんでした。それでもよろしい方は読んでいただけると幸いです。</p>
+
+<h3><a id="h5-1-2"></a>訂正</h3>
+<p>部誌のsample版の図7.1の&lt;DOCTYPE! html&gt;は&lt;!DOCTYPE html&gt;で、図7.1と図7.4の画像の&lt;title&gt;nada掲示板&lt;/title&gt;のところは正しくは&lt;title&gt;ndnd掲示板&lt;/title&gt;でした。</p>
+
+<h2><a id="h5-2"></a><span class="secno">5.2　</span>webアプリとは</h2>
+<p>webアプリとは、ウェブなどのネットワークから利用するアプリです。また、webアプリには、よく比較されるものとしてネイティブアプリというものがあります。ネイティブアプリとは、手元の機器にインストールして使うアプリです。</p>
+
+<h2><a id="h5-3"></a><span class="secno">5.3　</span>作るwebアプリの内容</h2>
+<p>今回作るwebアプリは「ndnd掲示板」です。名前の通り掲示板として使えます。(とりあえず形にしたので稚拙な部分があるかもしれません…)スレッドにタグをつける機能などをつけます。</p>
+
+<h2><a id="h5-4"></a><span class="secno">5.4　</span>作成手順</h2>
+<p>今回は、windowsでメモ帳を使って作っていきます。htmlファイルをメモ帳で開くときはファイルを選択し右クリックして、「プログラムから開く」からメモ帳をクリックすれば開けます。cssファイルをメモ帳で開くときはダブルクリックすれば開けます。</p>
+
+<h3><a id="h5-4-1"></a>トップページ作成</h3>
+<p>最初に、フォルダを適当な名前で作り、その中にindex.htmlというファイルを作ります。そしてindex.htmlをメモ帳を開いて、下のコードを記述します。</p>
+<div id="index.html1" class="caption-code">
+<p class="caption">リスト5.1: </p>
+<pre class="list highlight">&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+        &lt;head&gt;
+                &lt;meta charset="UTF-8"&gt;
+                &lt;title&gt;ndnd掲示板&lt;/title&gt;
+        &lt;/head&gt;
+
+        &lt;body&gt;
+                &lt;h1&gt;ndnd掲示板&lt;/h1&gt;
+                &lt;h2&gt;概要&lt;/h2&gt;
+                &lt;p&gt;このサイトは名前の通り掲示板です。&lt;/p&gt;
+                &lt;h3&gt;お願い&lt;/h3&gt;
+                &lt;p&gt;誹謗中傷や暴言はやめてください&lt;/p&gt;
+        &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+<p>これはHTMLというマークアップ言語(プログラミング言語とは違う！)によって書かれたものです。これがwebアプリの土台となります。</p>
+<p>軽くだけ説明すると、&lt;!DOCTYPE html&gt;でhtml文書のだと宣言されています。そして、&lt;head&gt;タグの中身にはwebサイトに表示されない設定が、&lt;body&gt;タグの中身にはwebサイトに表示される文書が記述されています。</p>
+<p>ここで、上書き保存をし、ファイルをクリックして開くと画像のようになります。</p>
+<div id="saisyonosite" class="image">
+<img src="images/nisnah/saisyonosite.png" alt="" class="width-100per" />
+<p class="caption">
+図5.1: 
+</p>
+</div>
+<p>(。´・ω・)ん?と思いましたよね？何か味気ないなあと。それは、CSSファイルを作っていないからです。CSSとはHTMLで書かれた文書の見た目を装飾することのできるスタイルシート言語です。ということで、CSSファイルを作っていきます。まず、先ほど作った適当な名前を付けたフォルダの中に、style.cssというファイルを作ります。そしてstyle.cssをメモ帳で開き、下のコードを記述します。</p>
+<div id="style.css1" class="caption-code">
+<p class="caption">リスト5.2: </p>
+<pre class="list highlight">@charset "UTF-8";
+body
+{
+        background: linear-gradient(90deg,#FFE5AE,#FFFFFF);
+}
+h1
+{
+        font-size: 500%;
+        text-align: center;
+        text-decoration:underline;
+        text-decoration-color:#4169e1;
+}
+h2,h3,p
+{
+        font-size: 200%;
+        text-align: center;
+}
+</pre>
+</div>
+<p>これを大まかに説明すると、font-sizeで文字の大きさを、text-alignで文字の位置を設定し、text-decorationでデコレーションを設定し、text-decoration-colorでそのデコレーションの色を決定しています。</p>
+<p>記述出来たら、上書き保存をします。その次に、index.htmlをメモ帳で開き、&lt;title&gt;ndnd掲示板&lt;/title&gt;の下に下のコードを記述します。</p>
+<div id="index.html2" class="caption-code">
+<p class="caption">リスト5.3: </p>
+<pre class="list highlight">                &lt;link rel="stylesheet" href="style.css"&gt;
+</pre>
+</div>
+<p>これを書くことでindex.htmlにstyle.cssが適用されます。</p>
+<p>またまた上書き保存をし、index.htmlを開くと…</p>
+<div id="kaizenngosite" class="image">
+<img src="images/nisnah/kaizenngosite.png" alt="" class="width-100per" />
+<p class="caption">
+図5.2: 
+</p>
+</div>
+<p>なんと、先ほどよりカラフルにいい感じになりました！このほかにも、HTMLファイルの中にCSSを記述する方法などもあります。ここまでで、掲示板のトップページのおおよその見た目が完成しましました</p>
+
+<h3><a id="h5-4-2"></a>掲示板作成</h3>
+<p>ここからは掲示板を作っていきます。</p>
+<p>まず、&lt;p&gt;誹謗中傷や暴言はやめてください&lt;/p&gt;の下に下のコードを書きます</p>
+<div id="index.html3" class="caption-code">
+<p class="caption">リスト5.4: </p>
+<pre class="list highlight">                &lt;form&gt;
+                        &lt;p&gt;ユーザー名: &lt;input type="text" id="user"&gt;&lt;/p&gt;
+                        &lt;p&gt;投稿内容: &lt;textarea id="toukounaiyou"&gt;&lt;/textarea&gt;&lt;/p&gt;
+                        &lt;div align="center"&gt;&lt;button type=”button” id="btn" onClick="myfanc()"&gt;投稿&lt;/button&gt;&lt;/div&gt;
+                &lt;/form&gt;
+                &lt;h2&gt;投稿一覧&lt;/h2&gt;
+                &lt;div align="center" id="naiyou"&gt;&lt;p&gt;&lt;/p&gt;&lt;/div&gt;
+</pre>
+</div>
+<p>そして、HTMLファイルを開くと下のようになります。(全体を移すために縮小しています)</p>
+<div id="saisyuusyasin" class="image">
+<img src="images/nisnah/saisyuusyasin.png" alt="" class="width-100per" />
+<p class="caption">
+図5.3: 
+</p>
+</div>
+<p>これで投稿するフォームの原型と投稿した後にその投稿を表示する場所が出来上がりました。</p>
+<p>今回はこれで終わりです。最後まで作りきれず、申し訳ございませんでした。</p>
+
+<h2><a id="h5-5"></a><span class="secno">5.5　</span>参考文献</h2>
+<p><a href="https://www.kagoya.jp/howto/it-glossary/web/webapplication/" class="link">【図解】WEBアプリケーションとは？仕組みと開発言語を 解説！ - カゴヤのサーバー研究室</a>(https://www.kagoya.jp/howto/it-glossary/web/webapplication/)</p>
+      </div>
+      <div class="navs">
+        <nav class="book-navi book-prev">
+                    <a href="sug.html">
+            <div class="book-cursor"><span class="cursor-prev">◀ 応用情報技術者試験の対策について</span></div>
+          </a>
+                  </nav>
+        <nav class="book-navi book-next">
+                    <a href="stranger_86952.html">
+            <div class="book-cursor"><span class="cursor-next">▶ レシート記述言語で遊ぶ</span></div>
+          </a>
+                  </nav>
+      </div>
+    </div>
+  </div>
+  <footer>
+      </footer>
+  <script>
+    (function() {
+      if (!window.katex) { return; }
+      var equations = [].slice.call(document.querySelectorAll(".equation"));
+      for (var i = 0; i < equations.length; i++) {
+        katex.render(equations[i].textContent, equations[i]);
+      }
+    }) ();
+  </script>
+</body>
+</html>

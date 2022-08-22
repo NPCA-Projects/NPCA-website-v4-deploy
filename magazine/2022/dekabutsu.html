@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4970457-1"></script>
+  <script>
+    if (document.domain === 'www.npca.jp') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-4970457-1');
+    }
+  </script>
+  <script type="text/javascript" id="MathJax-script" async="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="next" title="ゼロから作る量子コンピューター" href="chito.html">  <meta name="generator" content="Re:VIEW" />
+  <title>TOTPをC#で生成する | 灘校パソコン研究部部誌2022</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="book">
+    <nav class="side-content">
+      <h1>灘校パソコン研究部部誌2022</h1>
+      <ul class="book-toc">
+<li><a href="index.html">TOP</a></li>
+<li><a href="dekabutsu.html">第1章　TOTPをC#で生成する</a></li>
+<li><a href="chito.html">第2章　ゼロから作る量子コンピューター</a></li>
+<li><a href="maguro.html">第3章　i3 window managerを使ってみよう</a></li>
+<li><a href="sug.html">第4章　応用情報技術者試験の対策について</a></li>
+<li><a href="nisnah.html">第5章　初めてのwebアプリ作成</a></li>
+<li><a href="stranger_86952.html">第6章　レシート記述言語で遊ぶ</a></li>
+<li><a href="kentand.html">第7章　たのしいビット・二分探索アルゴリズムの世界</a></li>
+<li><a href="tea.html">第8章　万年カレンダーを実装する</a></li>
+</ul>
+      <p class="review-signature">powered by <a href="http://reviewml.org/">Re:VIEW</a></p>
+    </nav>
+    <div class="book-body">
+      <header>
+      </header>
+      <div class="book-page">
+        <h1><a id="h1"></a><span class="secno">第1章　</span>TOTPをC#で生成する</h1>
+<p><p style="text-align:right">76回生 デカブツ</p></p>
+
+<h2><a id="h1-1"></a><span class="secno">1.1　</span>挨拶</h2>
+<p>76回のデカブツです。気が付けば学校生活が2/3終わっていました。今年で20周年のC#という言語を触っています。この記事は入部後初めてのものとなりますので、多少拙いところがあると思いますが、暖かい目でご覧ください。</p>
+
+<h2><a id="h1-2"></a><span class="secno">1.2　</span>実装したコードを見たいという方へ</h2>
+<p>記事中に含めず外に置くことにしました。下のリンクから御覧ください。</p>
+<p><a href="https://github.com/testuser1111111-nd/LibraryforTOTP/blob/master/LibraryForTOTP.cs" class="link">https://github.com/testuser1111111-nd/LibraryforTOTP/blob/master/LibraryForTOTP.cs</a></p>
+
+<h2><a id="h1-3"></a><span class="secno">1.3　</span>多要素認証に使われるTOTPとHOTPについて</h2>
+
+<h3><a id="h1-3-1"></a>多要素認証とは</h3>
+<p>多要素認証は、IPA(情報処理推進機構)のWebサイトによると、「各種インターネットサービスにおける不正ログイン対策として、複数の要素（記憶、所持、生体情報）を用いた認証方式」<a id="fnb-ipa" href="#fn-ipa" class="noteref" epub:type="noteref">*5</a>と述べられています。例えば、パスワードを入力した後にSMSやEメールで送られてくるコードを入力するというようなWebサイトは、多要素認証対応、などといった感じで呼べます。</p>
+
+<h3><a id="h1-3-2"></a>HOTPとは</h3>
+<p>HOTPは、上で述べられた「複数の要素」の内の一つとして使われる形式です。特徴としては、ユーザー側とサービス側で共有した鍵と特定の数字(サービス側で生成した乱数や生成した回数など)を使い、HMAC-SHA-1関数により生成される数桁の数字のパスコードを使って認証するというものです。</p>
+
+<h3><a id="h1-3-3"></a>TOTPとは</h3>
+<p>TOTPは、先ほどのHOTPの特定の数字を現在時刻から求めたカウンタに置き換え、パスコードを生成するものです。短時間で更新され、生成に使う特定の数字を共有しやすいという点により、HOTPよりもよく使われています。</p>
+<div class="column">
+
+<h4><a id="column-1"></a>TOTPを生成できるアプリ</h4>
+<p>スマホでTOTPを生成できるアプリとしては</p>
+<ul>
+<li>Google社の「Google Authenticator」</li>
+</ul>
+<ul>
+<li>Microsoft社の「Microsoft Authenticator」</li>
+</ul>
+<ul>
+<li>Red Hat社の「FreeOTP」</li>
+</ul>
+<p>パソコン上で生成できるアプリは、</p>
+<ul>
+<li>Twilio社の「Authy」(スマホにもインストール可能)</li>
+</ul>
+<p>などがあるそうです。</p>
+</div>
+
+<h3><a id="h1-3-4"></a>HMAC-SHA-1とは</h3>
+<p>HMAC-SHA-1についての仕様は、文字数が大変なことになりそうなのでここでは大まかな内容しか伝えません。詳しく知りたい場合はIETFという団体のRFC2104という文書<a id="fnb-id_2104" href="#fn-id_2104" class="noteref" epub:type="noteref">*1</a>で示されているので見るといいと思います。</p>
+<p>HMAC-SHA-1は鍵付きハッシュ関数(鍵と入力によって決まるランダムな短い出力を返す)の一部であり、SHA-1というハッシュ関数を元にして使われているものです。このHMAC-SHA-1というのは、基本的にオンライン上でメッセージが改ざんされていないかを確かめるのに使われていたらしいですが、ベースとなるSHA-1が古くなってきたため新しくSHA-2やSHA-3などを使ったものに取って代わられているようです。今回はC#に公式でこれを計算する機能(System.Security.Cryptography.HMACSHA1)があるので、それをそのまま使います。</p>
+
+<h2><a id="h1-4"></a><span class="secno">1.4　</span>TOTPとHOTPの仕様と生成方法について</h2>
+
+<h4><a id="h1-4-0-1"></a>1 注意書き</h4>
+<p>TOTPとHOTPについての仕様は、細かいところまで書くと文字数が大変なことになりそうなのでここでは要約した内容しか書きません。詳しく知りたい場合はIETFという団体のRFC6238という文書<a id="fnb-id_6238" href="#fn-id_6238" class="noteref" epub:type="noteref">*2</a>とRFC4226という文書<a id="fnb-id_4226" href="#fn-id_4226" class="noteref" epub:type="noteref">*3</a>で示されているので見るといいと思います。</p>
+
+<h4><a id="h1-4-0-2"></a>2 生成のための大まかな手順</h4>
+
+<h4><a id="h1-4-0-3"></a>2.1 TOTPの場合</h4>
+<p>1. 鍵を読み込みます</p>
+<p>2. 1970年1月1日午前0時0分0秒から現在の協定世界時(UTC)までの秒数を30で割りカウンタを求めます(なおこの時余りは切り捨てます)</p>
+<p>3. 先ほどの鍵とカウンタをもとにHOTPを求めます(下のHOTPの場合を御覧ください。)</p>
+<p>4. 求めたHOTPを出力します</p>
+
+<h4><a id="h1-4-0-4"></a>2.2 HOTPの場合</h4>
+<p>1. 鍵とカウンタを読み込みます</p>
+<p>2. 鍵とカウンタをHMAC-SHA-1関数を使ってメッセージ認証符号と呼ばれるバイト配列を取得します</p>
+<p>3. 先ほど取得したバイト配列をDT関数(省略、特定の一部だけを切り取るものと考えてください。)を使って最大<span class="equation">\( 2^{31}-1 \)</span>の整数を求めます</p>
+<p>4. 先ほど取得した整数を1000000で割り、6桁の数字を求めます。(6桁に満たない場合は0埋め)</p>
+<p>5. 6桁の数字を出力します</p>
+<p>と、非常に簡素な仕組みとなっています。上をそのまま実装した場合のC#でのコードは下の様です。</p>
+<div id="TOTP" class="caption-code">
+<p class="caption">リスト1.1: TOTP.cs</p>
+<pre class="list language-CSharp highlight">using System;
+using System.Security.Cryptography;
+namespace LibraryForTOTP
+{
+    public static class RFC6238andRFC4226
+    {
+        public static int GenTOTP(byte[] S, int adjust = 0, int span = 30)
+        {
+            TimeSpan time = DateTime.UtcNow - new DateTime(1970, 1, 1);
+            var counter = (long)time.TotalSeconds / span;
+            return GenHOTP(S, counter + adjust);
+        }
+        public static int GenHOTP(byte[] S, long C, int digit = 6)
+        {
+            var hmsha = new HMACSHA1();
+            hmsha.Key = S;
+            var counter = BitConverter.GetBytes(C);
+            Array.Reverse(counter, 0, counter.Length);
+            var hs = hmsha.ComputeHash(counter);
+            return DTruncate(hs) % (int)(Math.Pow(10, digit));
+        }
+        static int DTruncate(byte[] vs)
+        {
+            var offset = vs[vs.Length - 1] & 15;
+            var P = (vs[offset] << 24 | vs[offset + 1] << 16 | vs[offset + 2] << 8 | vs[offset + 3]) & 0x7fffffff;
+            return P;
+        }
+    }
+}
+</pre>
+</div>
+
+<h2><a id="h1-5"></a><span class="secno">1.5　</span>Base●●とは?</h2>
+<p>コンピュータは基本的に0と1だけが連なった様式でデータを扱っています。先ほどのTOTPの生成の時に使う鍵もコンピュータ内では0と1だけで表されます。しかし、それらのデータを人間が扱う時、例えばWebページ上から書き写す時や、鍵を印刷しておくとき0と1だけで表された長ったらしい文字列を扱うのはハッキリ言って苦痛にしかなりません。</p>
+<p>そこで、人間にとって扱いやすくなるよう、アルファベットと数字一つずつを、2のべき乗通りの個数の状態に対応させ1文字で表せるようにするのがBase●●というフォーマットです。</p>
+<p>16通りの状態を1文字で表すBase16、32通りの状態を1文字で表すBase32、64通りの状態を1文字で表すBase64の3種類が基本的なものとなります。ちなみに、C#では、Base64での変換は公式で実装されていますが、Base32での変換は公式では実装されていません。(記事執筆時)</p>
+<p>人間だけでなく、コンピュータ同士で単純な文字だけしか通信で送れない時にも使われます。その時は基本的にBase64が使われます。(例：電子メールや掲示板など)</p>
+<p>これについても、詳しくはIETFという団体のRFC4648という文書<a id="fnb-id_4648" href="#fn-id_4648" class="noteref" epub:type="noteref">*4</a>で示されているので見るといいと思います。</p>
+<p>今回は作ったアプリではBase32を使って、鍵を入力、保存できるようにしました。</p>
+
+<h2><a id="h1-6"></a><span class="secno">1.6　</span>Base32の詳細とその変換方法について</h2>
+<p>Base32では、32通りのデータを基本的には下の表の組み合わせでアルファベットと数字に対応させます。</p>
+<p>アルファベットは大文字と小文字どちらでもOKです。また、数字の0と1が使われていないのは、アルファベットのOとIとの見分けが付きにくいからという理由だそうです。</p>
+<div id="table" class="table">
+<p class="caption">表1.1: 文字とデータの対応表</p>
+<table>
+<tr><th>文字その1</th><th>対応するデータその1</th><th>文字その2</th><th>対応するデータその2</th></tr>
+<tr><td>A</td><td>00000</td><td>Q</td><td>10000</td></tr>
+<tr><td>B</td><td>00001</td><td>R</td><td>10001</td></tr>
+<tr><td>C</td><td>00010</td><td>S</td><td>10010</td></tr>
+<tr><td>D</td><td>00011</td><td>T</td><td>10011</td></tr>
+<tr><td>E</td><td>00100</td><td>U</td><td>10100</td></tr>
+<tr><td>F</td><td>00101</td><td>V</td><td>10101</td></tr>
+<tr><td>G</td><td>00110</td><td>W</td><td>10110</td></tr>
+<tr><td>H</td><td>00111</td><td>X</td><td>10111</td></tr>
+<tr><td>I</td><td>01000</td><td>Y</td><td>11000</td></tr>
+<tr><td>J</td><td>01001</td><td>Z</td><td>11001</td></tr>
+<tr><td>K</td><td>01010</td><td>2</td><td>11010</td></tr>
+<tr><td>L</td><td>01011</td><td>3</td><td>11011</td></tr>
+<tr><td>M</td><td>01100</td><td>4</td><td>11100</td></tr>
+<tr><td>N</td><td>01101</td><td>5</td><td>11101</td></tr>
+<tr><td>O</td><td>01110</td><td>6</td><td>11110</td></tr>
+<tr><td>P</td><td>01111</td><td>7</td><td>11111</td></tr>
+</table>
+</div>
+
+<h3><a id="h1-6-1"></a>Base32への変換(エンコード)の大まかな手順</h3>
+<p>1. Base32へ変換するデータを用意します。ここでは、各バイトを16進数で表して&quot;78 84 BA 05 C5 68 06&quot;とします。</p>
+<p>2. データを5ビットごとに切り分けます。長さが足りない場合、右0埋めします。この場合2進数で&quot;01111 00010 00010 01011 10100 00001 01110 00101 01101 00000 00011 00000&quot;となります。</p>
+<p>3. それぞれに対し、上のテーブルで対応する文字を探し、変換します。そうすると、&quot;PCCLUBOFNADA&quot;という文字列が出てきます。</p>
+<p>4. 文字列の長さが8の倍数ではない場合はパディング文字(ここでは=)で文字列の右を埋めます。</p>
+<p>5. すると&quot;PCCLUBOFNADA====&quot;という文字列が出てきます。これでBase32エンコードができました。</p>
+
+<h3><a id="h1-6-2"></a>Base32からの変換(デコード)の大まかな手順</h3>
+<p>1. Base32に既に変換されている文字列を用意します。ここでは、&quot;PCCLUBOFNADA====&quot;という文字列から変換します。</p>
+<p>2. 文字列を八文字ごとに切り分けます。これで、&quot;PCCLUBOF&quot; と &quot;NADA====&quot; に分けられます。</p>
+<p>3. それぞれの切り分けられた文字列に対して、パディング文字の量から含んでいるバイトの個数を求めます。&quot;PCCLUBOF&quot;は、パディング文字が0個なので、5バイトの情報を含んでおり、&quot;NADA====&quot;は、パディング文字が4個なので、2バイトの情報を含んでいることとなります。</p>
+<div id="padding" class="table">
+<p class="caption">表1.2: パディングの数とバイトの数の対応</p>
+<table>
+<tr><th>パディングの数</th><th>普通の文字の数</th><th>バイトの数</th><th>打ち間違えの可能性</th></tr>
+<tr><td>0</td><td>8</td><td>5</td><td>低</td></tr>
+<tr><td>1</td><td>7</td><td>4</td><td>低</td></tr>
+<tr><td>2</td><td>6</td><td></td><td>高</td></tr>
+<tr><td>3</td><td>5</td><td>3</td><td>低</td></tr>
+<tr><td>4</td><td>4</td><td>2</td><td>低</td></tr>
+<tr><td>5</td><td>3</td><td></td><td>高</td></tr>
+<tr><td>6</td><td>2</td><td>1</td><td>低</td></tr>
+<tr><td>7</td><td>1</td><td></td><td>高</td></tr>
+</table>
+</div>
+<p>4. それぞれの文字を5ビットのデータに変換します。対応の表は以下のようです</p>
+<p>この表を使い、&quot;PCCLUBOF&quot;と&quot;NADA====&quot;を変換すると、それぞれ2進数で&quot;01111000 10000100 10111010 00000101 11000101&quot;と&quot;01101000 00000110 0000&quot;となります。</p>
+<p>5. これらを手順3で求めたバイトの数分だけ切り出します。5バイト=40ビット、2バイト=16ビットなので、それぞれ、&quot;01111000 10000100 10111010 00000101 11000101&quot;と&quot;01101000 00000110&quot;と切り出されます。</p>
+<p>6. これらを繋げて、16進数で表すと、&quot;78 84 BA 05 C5&quot;と&quot;68 06&quot;となりこれは最初に決めたデータと同じです。これで&quot;PCCLUBOFNADA====&quot;をデコードすることに成功しました</p>
+
+<h2><a id="h1-7"></a><span class="secno">1.7　</span>実際に使ってみる</h2>
+<p>ということで、上二つを試すためにこんなアプリを作ってみました。</p>
+<p>下のリンクからダウンロード出来るはずです</p>
+<p><a href="https://drive.google.com/file/d/1yErscqXR89zYREBKEsX5YLE4s4jbbC42/view?usp=sharing" class="link">https://drive.google.com/file/d/1yErscqXR89zYREBKEsX5YLE4s4jbbC42/view?usp=sharing</a></p>
+<div id="CUI" class="image">
+<img src="images/dekabutsu/CUI.png" alt="CUI版" />
+<p class="caption">
+図1.1: CUI版
+</p>
+</div>
+<div id="GUI" class="image">
+<img src="images/dekabutsu/GUI.png" alt="GUI版" />
+<p class="caption">
+図1.2: GUI版
+</p>
+</div>
+<p>どちらも、.NET6.0 の適切なランタイムが入っていれば動くはずです。(GUIの方はWindowsでしか動きません)</p>
+
+<h2><a id="h1-8"></a><span class="secno">1.8　</span>参考文献</h2>
+<p>RFC2104 &quot;HMAC: Keyed-Hashing for Message Authentication&quot; by IETF :<a href="https://datatracker.ietf.org/doc/html/rfc2104" class="link">https://datatracker.ietf.org/doc/html/rfc2104</a></p>
+<p>RFC6238 &quot;TOTP: Time-Based One-Time Password Algorithm&quot; by IETF :<a href="https://datatracker.ietf.org/doc/html/rfc6238" class="link">https://datatracker.ietf.org/doc/html/rfc6238</a></p>
+<p>RFC4226 &quot;HOTP: An HMAC-Based One-Time Password Algorithm&quot; by IETF :<a href="https://datatracker.ietf.org/doc/html/rfc4226" class="link">https://datatracker.ietf.org/doc/html/rfc4226</a></p>
+<p>RFC4648 &quot;The Base16, Base32, and Base64 Data Encodings&quot; by IETF :<a href="https://datatracker.ietf.org/doc/html/rfc4648" class="link">https://datatracker.ietf.org/doc/html/rfc4648</a></p>
+<p>不正ログイン対策特集ページ by IPA(情報処理推進機構) :<a href="https://www.ipa.go.jp/security/anshin/account_security.html" class="link">https://www.ipa.go.jp/security/anshin/account_security.html</a></p>
+<div class="footnote" epub:type="footnote" id="fn-id_2104"><p class="footnote">[*1] RFC2104の参考URL:<a href="https://datatracker.ietf.org/doc/html/rfc2104" class="link">https://datatracker.ietf.org/doc/html/rfc2104</a></p></div>
+<div class="footnote" epub:type="footnote" id="fn-id_6238"><p class="footnote">[*2] RFC6238の参考URL:<a href="https://datatracker.ietf.org/doc/html/rfc6238" class="link">https://datatracker.ietf.org/doc/html/rfc6238</a></p></div>
+<div class="footnote" epub:type="footnote" id="fn-id_4226"><p class="footnote">[*3] RFC4226の参考URL:<a href="https://datatracker.ietf.org/doc/html/rfc4226" class="link">https://datatracker.ietf.org/doc/html/rfc4226</a></p></div>
+<div class="footnote" epub:type="footnote" id="fn-id_4648"><p class="footnote">[*4] RFC4648の参考URL:<a href="https://datatracker.ietf.org/doc/html/rfc4648" class="link">https://datatracker.ietf.org/doc/html/rfc4648</a></p></div>
+<div class="footnote" epub:type="footnote" id="fn-ipa"><p class="footnote">[*5] ソース <a href="https://www.ipa.go.jp/security/anshin/account_security.html" class="link">https://www.ipa.go.jp/security/anshin/account_security.html</a></p></div>
+      </div>
+      <div class="navs">
+        <nav class="book-navi book-prev">
+                  </nav>
+        <nav class="book-navi book-next">
+                    <a href="chito.html">
+            <div class="book-cursor"><span class="cursor-next">▶ ゼロから作る量子コンピューター</span></div>
+          </a>
+                  </nav>
+      </div>
+    </div>
+  </div>
+  <footer>
+      </footer>
+  <script>
+    (function() {
+      if (!window.katex) { return; }
+      var equations = [].slice.call(document.querySelectorAll(".equation"));
+      for (var i = 0; i < equations.length; i++) {
+        katex.render(equations[i].textContent, equations[i]);
+      }
+    }) ();
+  </script>
+</body>
+</html>

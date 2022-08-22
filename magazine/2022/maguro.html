@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4970457-1"></script>
+  <script>
+    if (document.domain === 'www.npca.jp') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-4970457-1');
+    }
+  </script>
+  <script type="text/javascript" id="MathJax-script" async="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="next" title="応用情報技術者試験の対策について" href="sug.html"><link rel="prev" title="ゼロから作る量子コンピューター" href="chito.html">  <meta name="generator" content="Re:VIEW" />
+  <title>i3 window managerを使ってみよう | 灘校パソコン研究部部誌2022</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="book">
+    <nav class="side-content">
+      <h1>灘校パソコン研究部部誌2022</h1>
+      <ul class="book-toc">
+<li><a href="index.html">TOP</a></li>
+<li><a href="dekabutsu.html">第1章　TOTPをC#で生成する</a></li>
+<li><a href="chito.html">第2章　ゼロから作る量子コンピューター</a></li>
+<li><a href="maguro.html">第3章　i3 window managerを使ってみよう</a></li>
+<li><a href="sug.html">第4章　応用情報技術者試験の対策について</a></li>
+<li><a href="nisnah.html">第5章　初めてのwebアプリ作成</a></li>
+<li><a href="stranger_86952.html">第6章　レシート記述言語で遊ぶ</a></li>
+<li><a href="kentand.html">第7章　たのしいビット・二分探索アルゴリズムの世界</a></li>
+<li><a href="tea.html">第8章　万年カレンダーを実装する</a></li>
+</ul>
+      <p class="review-signature">powered by <a href="http://reviewml.org/">Re:VIEW</a></p>
+    </nav>
+    <div class="book-body">
+      <header>
+      </header>
+      <div class="book-page">
+        <h1><a id="h3"></a><span class="secno">第3章　</span>i3 window managerを使ってみよう</h1>
+<p><p style="text-align:right">76回生 maguro</p></p>
+
+<h2><a id="h3-1"></a><span class="secno">3.1　</span>挨拶</h2>
+<p>こんにちは。76回生（高2）のmaguroです。普段は競技プログラミングとCTFをしています。気が付いたらもう高校生活の終わりが近づいており、焦りが出始めてきました。</p>
+<p>今回は、前に使って思ったよりも良かったi3 window managerを紹介したいと思います。</p>
+
+<h2><a id="h3-2"></a><span class="secno">3.2　</span>i3 window managerってなに？</h2>
+<p>i3 window manager(i3wm)とは、<b>Linux上で動くタイル型ウィンドウマネージャ</b>です。多分ほとんどの人が分かっていないと思うので、とりあえずデスクトップ画面を見せたいと思います。これはManjaro i3wm Editionです。<a id="fnb-virtualmachine" href="#fn-virtualmachine" class="noteref" epub:type="noteref">*1</a></p>
+<div class="footnote" epub:type="footnote" id="fn-virtualmachine"><p class="footnote">[*1] 筆者はWindowsをメインで使っているので、これは仮想環境で撮影しています。</p></div>
+<div id="desktop" class="image">
+<img src="images/maguro/desktop.png" alt="デスクトップ画面" class="width-100per" />
+<p class="caption">
+図3.1: デスクトップ画面
+</p>
+</div>
+<p>これらの画面をキーボードだけで表示することができます。慣れるとマウスで操作するよりも早くできます。</p>
+<p>ここからちょっと詳しく説明します。分からなかったら飛ばしてください。</p>
+<dl>
+<dt>Linuxとは</dt>
+<dd>OS（コンピュータを動かす土台になるソフトウェア）の一種で、UbuntuやArch Linuxなどのディストリビューション（OSのコアになるカーネルと、その他もろもろのソフトを含めて配布する形態）の総称です。</dd>
+<dt>タイル型ウィンドウマネージャとは</dt>
+<dd>ウィンドウマネージャ（ウィンドウの配置や見た目を管理するプログラム）の一種です。</dd>
+</dl>
+<p>ウィンドウマネージャはウィンドウの描画や更新の手法で大きく</p>
+<ul>
+<li>コンポジット型ウィンドウマネージャ</li>
+<li>スタック型ウィンドウマネージャ</li>
+<li><b>タイル型ウィンドウマネージャ</b></li>
+</ul>
+<p>の3種類に分けられます。タイル型ウィンドウマネージャは他の2つのウィンドウマネージャと違い、ウィンドウ同士が重ならないように分割して表示します。</p>
+<p>「ウィンドウ同士が重ならない」以外に、i3wmの特徴として</p>
+<ul>
+<li><b>基本的にキーボード操作のみでウィンドウを配置できる</b><a id="fnb-keyboard" href="#fn-keyboard" class="noteref" epub:type="noteref">*2</a></li>
+<li>タブ・スタック化機能（Webブラウザーのタブのような感じでソフトを整理する）</li>
+<li>ワークスペース（仮想デスクトップ）機能</li>
+</ul>
+<p>が挙げられます。</p>
+<div class="footnote" epub:type="footnote" id="fn-keyboard"><p class="footnote">[*2] 一応WindowsやMacのようにマウスで動かせて、他のものと重なるウィンドウも作ることができます。</p></div>
+<p>本記事では具体的な入手手順は紹介しません。<code class="inline-code tt">i3wm</code>と検索すると様々な方法が出てくると思います。</p>
+
+<h2><a id="h3-3"></a><span class="secno">3.3　</span>起動から基本操作まで</h2>
+<p>まずは先ほどデスクトップ画面を見せた、i3wmが使えるLinuxであるManjaro i3wm Editionを起動して、ターミナル（コマンドが打ち込めるところ）を開けるようにしましょう。ここでi3wmでよく使うmodキーについて説明します。</p>
+
+<h3><a id="h3-3-1"></a>modキーとは</h3>
+<p>modキーはi3wmで使用する特別なキーで、デフォルトだとWinキー（Macでいうコマンドキー）やAltキーが割り当てられています。</p>
+<p>このキーと他のキーを一緒に押すことで、様々なことを行うことができます。例えば、</p>
+<ul>
+<li><code class="inline-code tt">$mod + enter</code>でターミナルを開く</li>
+<li><code class="inline-code tt">$mod + shift + q</code>でウィンドウを閉じる</li>
+</ul>
+<p>などです。</p>
+<p>とりあえず<code class="inline-code tt">$mod + enter</code>でターミナルを開きます。</p>
+<div id="terminal1" class="image">
+<img src="images/maguro/terminal1.png" alt="ターミナル（1画面）" class="width-100per" />
+<p class="caption">
+図3.2: ターミナル（1画面）
+</p>
+</div>
+<p>もう一回<code class="inline-code tt">$mod + enter</code>を押すと、画面が分割されてターミナルが2つ表示されます。</p>
+<div id="terminal2" class="image">
+<img src="images/maguro/terminal2.png" alt="ターミナル（2画面）" class="width-100per" />
+<p class="caption">
+図3.3: ターミナル（2画面）
+</p>
+</div>
+<p>下のショートカットでフォーカスするウィンドウを変えられます。</p>
+<ul>
+<li><code class="inline-code tt">$mod + j</code>で左</li>
+<li><code class="inline-code tt">$mod + k</code>で上</li>
+<li><code class="inline-code tt">$mod + l</code>で下</li>
+<li><code class="inline-code tt">$mod + ;</code>で右</li>
+</ul>
+<p>また、ウィンドウを追加するときにどこに追加するかは下のショートカットで指定できます。</p>
+<ul>
+<li><code class="inline-code tt">$mod + h</code>で右方向</li>
+<li><code class="inline-code tt">$mod + v</code>で下方向</li>
+</ul>
+<p>例えば、画面に何もソフトが無い状態から<code class="inline-code tt">$mod + Enter → $mod + Enter → $mod + v → $mod + Enter</code>と入力すると下の画面のようになります。</p>
+<div id="terminal3" class="image">
+<img src="images/maguro/terminal3.png" alt="ターミナル（3画面）" class="width-100per" />
+<p class="caption">
+図3.4: ターミナル（3画面）
+</p>
+</div>
+<p>そして、フォーカスしているウィンドウを閉じるためには、<code class="inline-code tt">$mod + shift + q</code>と押します。</p>
+
+<h2><a id="h3-4"></a><span class="secno">3.4　</span>ワークスペースの作成・切り替え</h2>
+<p>i3wmの特徴にあるワークスペース（仮想デスクトップ）について説明します。</p>
+<p>Windows 10の場合、</p>
+<ul>
+<li><code class="inline-code tt">win + ctrl + d</code>で仮想デスクトップを作成</li>
+<li><code class="inline-code tt">win + ctrl + (→ or ←)</code>で仮想デスクトップの切り替え</li>
+<li><code class="inline-code tt">win + ctrl + F4</code>で仮想デスクトップの削除</li>
+</ul>
+<p>ですが、i3wmは</p>
+<ul>
+<li><code class="inline-code tt">$mod + 数字キー</code>で数字番号のワークスペースに切り替える</li>
+<li><code class="inline-code tt">$mod + shift + 数字キー</code>でアクティブなウィンドウを数字番号のワークスペースに移動する</li>
+</ul>
+<p>とかなりシンプルです。わざわざ矢印キーで操作する必要がありません。</p>
+
+<h2><a id="h3-5"></a><span class="secno">3.5　</span>ソフトのインストール</h2>
+<p>ソフトのインストールは主に</p>
+<ul>
+<li>コマンドでインストール</li>
+<li>pacman-managerというソフトを使ってインストール</li>
+</ul>
+<p>の2つの方法があります。今回はコマンドでインストールします。</p>
+<p>コマンドでインストールするには、Manjaro i3wm Editionでは<b>pacman</b>というパッケージマネージャを使用します。基本的な使い方は、<code class="inline-code tt">sudo pacman -S インストールしたいパッケージ名</code>と打つだけです。例えば、Chromium(Chromeのなにか)をインストールすると、以下のようになります。</p>
+<div id="pacman-install" class="image">
+<img src="images/maguro/pacman-install.png" alt="Chromiumのインストール" class="width-100per" />
+<p class="caption">
+図3.5: Chromiumのインストール
+</p>
+</div>
+<p>パッケージは日を追うごとにどんどん新しくなるので、定期的にアップデートをしないといけません。全てのパッケージのアップデートは<code class="inline-code tt">sudo pacman -Syu</code>で行うことができます。</p>
+
+<h2><a id="h3-6"></a><span class="secno">3.6　</span>タスクバーの見た目の設定</h2>
+<p>画面の下にあるタスクバーはi3barと呼ばれ、これらに書かれている内容はデフォルトではi3statusというパッケージによって生成されています。</p>
+<p>しかし、i3statusよりも設定が豊富なパッケージに</p>
+<ul>
+<li>conky</li>
+<li>i3blocks</li>
+<li>isphtatus</li>
+</ul>
+<p>のようなものがあります。詳しい手順は省きますが、これらをインストールして設定を変えると、タスクバーを上に持ってきたり、タスクバーに書かれた内容を変えることができます。</p>
+
+<h2><a id="h3-7"></a><span class="secno">3.7　</span>おわりに</h2>
+<p>いかがだったでしょうか。仮想環境が壊れてしまい、最後の方はスクリーンショットを載せることができず申し訳ないです。1人でも多くi3wmの魅力を知っていただければ幸いです。</p>
+      </div>
+      <div class="navs">
+        <nav class="book-navi book-prev">
+                    <a href="chito.html">
+            <div class="book-cursor"><span class="cursor-prev">◀ ゼロから作る量子コンピューター</span></div>
+          </a>
+                  </nav>
+        <nav class="book-navi book-next">
+                    <a href="sug.html">
+            <div class="book-cursor"><span class="cursor-next">▶ 応用情報技術者試験の対策について</span></div>
+          </a>
+                  </nav>
+      </div>
+    </div>
+  </div>
+  <footer>
+      </footer>
+  <script>
+    (function() {
+      if (!window.katex) { return; }
+      var equations = [].slice.call(document.querySelectorAll(".equation"));
+      for (var i = 0; i < equations.length; i++) {
+        katex.render(equations[i].textContent, equations[i]);
+      }
+    }) ();
+  </script>
+</body>
+</html>

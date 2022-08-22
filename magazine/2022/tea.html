@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4970457-1"></script>
+  <script>
+    if (document.domain === 'www.npca.jp') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-4970457-1');
+    }
+  </script>
+  <script type="text/javascript" id="MathJax-script" async="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="prev" title="たのしいビット・二分探索アルゴリズムの世界" href="kentand.html">  <meta name="generator" content="Re:VIEW" />
+  <title>万年カレンダーを実装する | 灘校パソコン研究部部誌2022</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="book">
+    <nav class="side-content">
+      <h1>灘校パソコン研究部部誌2022</h1>
+      <ul class="book-toc">
+<li><a href="index.html">TOP</a></li>
+<li><a href="dekabutsu.html">第1章　TOTPをC#で生成する</a></li>
+<li><a href="chito.html">第2章　ゼロから作る量子コンピューター</a></li>
+<li><a href="maguro.html">第3章　i3 window managerを使ってみよう</a></li>
+<li><a href="sug.html">第4章　応用情報技術者試験の対策について</a></li>
+<li><a href="nisnah.html">第5章　初めてのwebアプリ作成</a></li>
+<li><a href="stranger_86952.html">第6章　レシート記述言語で遊ぶ</a></li>
+<li><a href="kentand.html">第7章　たのしいビット・二分探索アルゴリズムの世界</a></li>
+<li><a href="tea.html">第8章　万年カレンダーを実装する</a></li>
+</ul>
+      <p class="review-signature">powered by <a href="http://reviewml.org/">Re:VIEW</a></p>
+    </nav>
+    <div class="book-body">
+      <header>
+      </header>
+      <div class="book-page">
+        <h1><a id="h8"></a><span class="secno">第8章　</span>万年カレンダーを実装する</h1>
+<p><p style="text-align:right">78回生 てぃー</p></p>
+
+<h2><a id="h8-1"></a><span class="secno">8.1　</span>はじめに</h2>
+<p>こんにちは。78回生のてぃーです。昔はすしとるなという名前を使用していました。実はこの部の副部長をしています。ですが何も仕事をしていません。ごめんなさい。</p>
+<p>そういえば競プロをやめました。中2の夏くらいまでは競プロに全てを捧げるぞとか思っていたんですが、凄い人たちを見たり他に自分の好きなこと見つけたりして、そろそろ競プロは良いかなってなりました。</p>
+<p>ということで今回はSwiftで万年カレンダーのiOSアプリを実装することにしました。カレンダーは様々なアプリで使えるので、自分でカレンダーを作れるようになっておくとカスタマイズも自在にできるので便利だなと思い実装しました。</p>
+
+<h2><a id="h8-2"></a><span class="secno">8.2　</span>ツェラーの公式</h2>
+<p>万年カレンダーを実装する上で最も重要となるのが、曜日の計算です。この曜日の計算をするための公式がツェラーの公式というものです。まずはこの公式を導出します。</p>
+<p>とりあえず西暦<span class="equation">\( y \)</span>年<span class="equation">\( m \)</span>月<span class="equation">\( d \)</span>日の曜日を求めることにします。まず前提として、西暦1年1月1日は月曜日です。(紙版では土曜日としていましたが間違いです。すみません。)ここから何日経過したかを求めることで、曜日を計算することができます。閏年がなければ365に年数をかけるだけで良いのですが、閏年は、<br />「4の倍数かつ100の倍数でない。または400の倍数である年のみ閏年になる」<br />というややこしい感じになっているので日数を求めるのが割と大変です。</p>
+<p>まず、西暦<span class="equation">\( y \)</span>年1月1日の西暦1年1月1日からの経過日数を求めます。とりあえず100の倍数が鍵となるので、西暦<span class="equation">\( y \)</span>年を<span class="equation">\( 100j+k \)</span>年に分解します。閏年分以外を計算すると、<span class="equation">\( 365(100j+k-1) \)</span>日となります。ここから、基本的に100年に24回閏年があるので<span class="equation">\( +24j \)</span>日、ただし400年に25回ある世紀があるので<span class="equation">\( +\lfloor j/4 \rfloor \)</span>日、下2桁分の<span class="equation">\( +\lfloor k/4 \rfloor \)</span>をすると、西暦<span class="equation">\( y \)</span>年1月1日の西暦1年1月1日からの経過日数は、<br /><span class="equation">\( 365(100j+k-1) + \lfloor j/4 \rfloor + \lfloor k/4 \rfloor \)</span>日<br />となります。しかし365などは7で余りを取った方が小さくなるので、頑張って変形して、<br /><span class="equation">\( k-1-2j+ \lfloor j/4 \rfloor +\lfloor k/4 \rfloor \)</span>日<br />と書き換えることができます。</p>
+<p>それでは次に<span class="equation">\( m \)</span>月<span class="equation">\( d \)</span>日までの日数を求めることにしましょう。。とりあえず2月は閏年が入って邪魔なので、1月2月を前年の13月14月として考えると嬉しい気持ちになります。年の計算に閏年は含まれてるので、これで閏年のことは考えなくて良くなります、3月から1月1日の日数を順に計算すると、59,90,120,148,181,212,243,263,304,334,365,396となります。これらを7で余りをとると3,6,1,4,6,3,5,0,3,5,1,4となります。これは、<span class="equation">\( \lfloor 26(m+1)/10 \rfloor \)</span>の法を7とした余りと一致する(たまたま？わかりません)ので、ここに<span class="equation">\( +d \)</span>日して、<br /><span class="equation">\( k-2j+d-1+ \lfloor j/4 \rfloor +\lfloor k/4 \rfloor + \lfloor 26(m+1)/10 \rfloor \)</span>日<br />を7で割った余りが0の時に月曜日、1の時に火曜日…となることがわかります。詳しくはウィキペディアでも見てくださると嬉しいです。</p>
+
+<h2><a id="h8-3"></a><span class="secno">8.3　</span>実装</h2>
+<p>実際にSwiftでこれを実装します。カレンダーの場合は、毎月最初の日の曜日を求めて、それを順番に並べていくという実装方法が良いと思います。アプリに関していうと、SwiftUIというプラットフォームでは、四角いマス目を表のように配置できるので、今回はそれを使用してカレンダーを作りました。コードは次のような感じです。</p>
+<div id="code" class="image">
+<img src="images/tea/code.jpg" alt="" class="width-080per" />
+<p class="caption">
+図8.1: 
+</p>
+</div>
+
+<h2><a id="h8-4"></a><span class="secno">8.4　</span>アプリ概観</h2>
+<p>最後に、実際にこれを実装したアプリの概観だけ掲載します。</p>
+<div id="calendar" class="image">
+<img src="images/tea/calendar.jpg" alt="" class="width-080per" />
+<p class="caption">
+図8.2: 
+</p>
+</div>
+      </div>
+      <div class="navs">
+        <nav class="book-navi book-prev">
+                    <a href="kentand.html">
+            <div class="book-cursor"><span class="cursor-prev">◀ たのしいビット・二分探索アルゴリズムの世界</span></div>
+          </a>
+                  </nav>
+        <nav class="book-navi book-next">
+                  </nav>
+      </div>
+    </div>
+  </div>
+  <footer>
+      </footer>
+  <script>
+    (function() {
+      if (!window.katex) { return; }
+      var equations = [].slice.call(document.querySelectorAll(".equation"));
+      for (var i = 0; i < equations.length; i++) {
+        katex.render(equations[i].textContent, equations[i]);
+      }
+    }) ();
+  </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4970457-1"></script>
+  <script>
+    if (document.domain === 'www.npca.jp') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-4970457-1');
+    }
+  </script>
+  <script type="text/javascript" id="MathJax-script" async="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="next" title="万年カレンダーを実装する" href="tea.html"><link rel="prev" title="レシート記述言語で遊ぶ" href="stranger_86952.html">  <meta name="generator" content="Re:VIEW" />
+  <title>たのしいビット・二分探索アルゴリズムの世界 | 灘校パソコン研究部部誌2022</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="book">
+    <nav class="side-content">
+      <h1>灘校パソコン研究部部誌2022</h1>
+      <ul class="book-toc">
+<li><a href="index.html">TOP</a></li>
+<li><a href="dekabutsu.html">第1章　TOTPをC#で生成する</a></li>
+<li><a href="chito.html">第2章　ゼロから作る量子コンピューター</a></li>
+<li><a href="maguro.html">第3章　i3 window managerを使ってみよう</a></li>
+<li><a href="sug.html">第4章　応用情報技術者試験の対策について</a></li>
+<li><a href="nisnah.html">第5章　初めてのwebアプリ作成</a></li>
+<li><a href="stranger_86952.html">第6章　レシート記述言語で遊ぶ</a></li>
+<li><a href="kentand.html">第7章　たのしいビット・二分探索アルゴリズムの世界</a></li>
+<li><a href="tea.html">第8章　万年カレンダーを実装する</a></li>
+</ul>
+      <p class="review-signature">powered by <a href="http://reviewml.org/">Re:VIEW</a></p>
+    </nav>
+    <div class="book-body">
+      <header>
+      </header>
+      <div class="book-page">
+        <h1><a id="h7"></a><span class="secno">第7章　</span>たのしいビット・二分探索アルゴリズムの世界</h1>
+<p><p style="text-align:right">78回生 kentand</p></p>
+
+<h2><a id="h7-1"></a><span class="secno">7.1　</span>ごあいさつ</h2>
+<p>はじめまして。78回生のkentandです。もう中3にもなったので部誌を書きます。今は競技プログラミングを嗜んでいます。といっても、まだまだ実力はないので多少の間違いは許してください…</p>
+<p>今回は競技プログラミングで使われるようなビットや二分探索を使ったアルゴリズムを紹介していきます。</p>
+<p>後半ではビットや二分探索と言いづらいですが、二分されたものを使うアルゴリズムを紹介しています。</p>
+
+<h2><a id="h7-2"></a><span class="secno">7.2　</span>ビットとは</h2>
+<p>まずはビットについて説明していきます。</p>
+<p>ビットとは、0か1かで表される情報です。2通りだけです。コンピュータでよく見る0101011101000...みたいなもの一桁一桁がビットです。</p>
+<p>しかし、コンピュータではこれを何個も集めて何通りもの情報を表します。C++でのintやdoubleなどの数も内部ではこのビットで表現されます。</p>
+
+<h2><a id="h7-3"></a><span class="secno">7.3　</span>二分探索とは</h2>
+<p>次に二分探索について説明します。</p>
+<p>まずこんなゲームをするとしましょう。</p>
+<div class="column">
+
+<h3><a id="column-1"></a>数当てゲーム</h3>
+<p>あなたは数当てゲームをします。</p>
+<p>あなたが1～2022の数字を言うと、相手は正解の数字がそれより大きいか小さいかを言ってくれます。正解の数を当ててください。</p>
+</div>
+<p>どうすればいいでしょう？1、2、3…と質問していってもいいですが、とても時間がかかりますね？そんな時に役立つのが二分探索です。まずは1～2022の半分くらいの数字の1011を質問します。相手が「それは正解より大きい」と答えたとしましょう。</p>
+<div id="nibuntansaku1" class="image">
+<img src="images/kentand/nibuntansaku1.png" alt="1011を選んだ様子" class="width-095per" />
+<p class="caption">
+図7.1: 1011を選んだ様子
+</p>
+</div>
+<p>すると、図のように灰色の部分に答えが存在しないことが分かります。だから、黄色の部分だけを調べれば答えが出そうです。</p>
+<p>次に1011の半分くらいの数字の505を質問してみます。相手が「それは正解より小さい」と答えました。</p>
+<div id="nibuntansaku2" class="image">
+<img src="images/kentand/nibuntansaku2.png" alt="505を選んだ様子" class="width-095per" />
+<p class="caption">
+図7.2: 505を選んだ様子
+</p>
+</div>
+<p>するとやはり灰色の部分には答えは無いと分かります。だから残りは506～1010を調べれば良いのです。</p>
+<p>これを何回も繰り返せば、いずれ黄色の答えのある範囲が小さくなり、最終的に一つに決まります。</p>
+<p>このように、たくさんのなかから目標を選び出すときに、範囲を半分ずつに絞っていくのが二分探索です。こうすれば、2022回かかるかもしれなかった操作を、最大でも10回程度に抑えることができます！</p>
+
+<h2><a id="h7-4"></a><span class="secno">7.4　</span>さらに</h2>
+<p>ビットや二分探索の凄さはわかりましたか？これを使えば、様々な探索系の動作が簡単に出来ます。今からは、有名アルゴリズムやデータ構造への応用例を見ていきます。</p>
+
+<h2><a id="h7-5"></a><span class="secno">7.5　</span>用語集</h2>
+<p>ここからの話では、アルゴリズム等について語るため、いくつかそれを理解するための用語が必要です。その必要な単語を集めてここで説明します。</p>
+
+<h3><a id="h7-5-1"></a>log</h3>
+<p>これは、本来は数学の世界のものですが、ここでは数学での意味とは少し異なります。ここでは、<span class="equation">\( \log N \)</span>という表記は<span class="equation">\( N \)</span>が2の何乗になっているかを表しています。つまり、<span class="equation">\( \log 2 = 1 \)</span>になりますし、<span class="equation">\( \log 8 = 3 \)</span>です。</p>
+
+<h3><a id="h7-5-2"></a>計算量</h3>
+<p>これは、ざっくり説明すると、あるプログラムやアルゴリズムを実行するときにどれくらいの時間がかかるかを表します。といっても、この実行時間は、与えられるデータの量や数字の大きさにもよるので、一概に「○秒！」とは言えません。しかし、これはいくらデータ量やコンピュータの性能が変われど、データ量に対して比例するのか、二乗に比例するのか等はアルゴリズムごとに固有です。だから、一体アルゴリズムのスピードはどのくらいなのか比べるために次の物を使います。</p>
+
+<h3><a id="h7-5-3"></a>ランダウのオーダー記法</h3>
+<p>これも数学で使われるものですが、ここではアルゴリズムのスピードがデータ量に対してどのくらいなのかを示します。例えば、データが<span class="equation">\( N \)</span>個与えられるとします。そして、あるアルゴリズムの計算時間がこのデータ量<span class="equation">\( N \)</span>の二乗に比例するとします。このとき、これは<span class="equation">\( O(N^2) \)</span>と表します。といっても、これは大まかな比較に用いるものなので、<span class="equation">\( N \)</span>に比べれば基本的に小さい定数はオーダー記法では省きます。(AtCoderの問題で与えられる<span class="equation">\( N \)</span>は200000程のこともある)</p>
+
+<h3><a id="h7-5-4"></a>配列</h3>
+<p>これは、たくさんの数や文字などのデータが一直線に並んでいるものだと考えるとよいです。例えば、配列<span class="equation">\( A \)</span>（配列の大きさは<span class="equation">\( N \)</span>）があるとき、一つ目の要素は<span class="equation">\( A_1 \)</span>, 二つ目の要素は<span class="equation">\( A_2 \)</span>, ... Nつ目の要素は<span class="equation">\( A_N \)</span>　というふうに表されます。</p>
+
+<h2><a id="h7-6"></a><span class="secno">7.6　</span>Binary Indexed Tree(BIT)</h2>
+<p>まずは一つ目です。いきなりよくわからないものが登場しました。これは、二分探索やビットと似たような考え方を持つアルゴリズムの一つです。全く一緒では無いですが、説明を読めば似ている所に気が付くはずです。ちなみにこれはビットとは似て非なるものなので注意しましょう。</p>
+
+<h3><a id="h7-6-1"></a>どんなことができるの？</h3>
+<p>これは配列があるときに、「<span class="equation">\( l \)</span>個目から<span class="equation">\( r \)</span>個目までの全ての数の和を求める」「<span class="equation">\( i \)</span>番目の要素を知る、変更する」といったことができます。普通に考えると、<span class="equation">\( l \)</span>個目から<span class="equation">\( r \)</span>個目までの全ての和を求めるときは、答えに一つ一つ要素を足していかなければなりません。<span class="equation">\( r-l \)</span>が少ない内はいいですが、<span class="equation">\( r-l= \)</span>100000といった場合、一個一個足すのはとても時間がかかりますね？そこで役立つのがBITです。これは、工夫した配列を用意することで、<span class="equation">\( l \)</span>個目から<span class="equation">\( r \)</span>個目まで全ての和が<span class="equation">\( O(\log N) \)</span>で求まります！</p>
+
+<h3><a id="h7-6-2"></a>しくみ</h3>
+<p>「工夫した配列」と言いましたが、実際にどのような事をしているのか説明します。</p>
+<div id="BIT-1" class="image">
+<img src="images/kentand/BIT-1.png" alt="工夫した配列" class="width-095per" />
+<p class="caption">
+図7.3: 工夫した配列
+</p>
+</div>
+<p>図のように配列の各要素の和を記した配列があります。これを使って、上記の動作を実現したいです。しかし、実はもっと少ない要素数の配列でこれは実現できます。</p>
+<div id="BIT-2" class="image">
+<img src="images/kentand/BIT-2.png" alt="工夫した配列v2" class="width-095per" />
+<p class="caption">
+図7.4: 工夫した配列v2
+</p>
+</div>
+<p>実はこのオレンジの部分だけを配列として記録しておけばBITは実現できます。では、実際にこのオレンジの部分だけを利用したBITの動作を図で見てみましょう。</p>
+<div id="BIT-4" class="image">
+<img src="images/kentand/BIT-4.png" alt="区間の和を求める様子" class="width-095per" />
+<p class="caption">
+図7.5: 区間の和を求める様子
+</p>
+</div>
+<p>ここでは<span class="equation">\( A_4 \)</span>から<span class="equation">\( A_7 \)</span>までの和を考えます。まず、図のように、「<span class="equation">\( A_1+A_2+A_3+A_4 \)</span>」と「<span class="equation">\( A_5+A_6 \)</span>」と「<span class="equation">\( A_7 \)</span>」のブロックを使えば、<span class="equation">\( A_1 \)</span>から<span class="equation">\( A_7 \)</span>までの和を求めることができます。(図の青矢印の区間)次に、「<span class="equation">\( A_1+A_2 \)</span>」と「<span class="equation">\( A_3 \)</span>」のブロックを使えば、<span class="equation">\( A_1 \)</span>から<span class="equation">\( A_3 \)</span>までの和が求まります。(図の赤矢印の区間)青矢印の区間から赤矢印の区間を引けば、<span class="equation">\( A_4 \)</span>から<span class="equation">\( A_7 \)</span>までの和が求められます！</p>
+<p>さて、これにかかる時間ですが、<span class="equation">\( N \)</span>が巨大になったときに、これは普通にやるよりもはるかに高速に動きます。具体的には、1から<span class="equation">\( r \)</span>までの区間の和を求めるときに、同じ個数の数が入ったブロックを複数回使うことは無いため、これは最大でも<span class="equation">\( O(\log N) \)</span>に抑えることが出来ます。これは<span class="equation">\( N= \)</span>1000000といった巨大な数でも、40回以内の操作で任意の区間の和を求める事ができます。でも実は、区間の和を求めるだけならもっと高速なアルゴリズムが存在します。累積和と呼ばれるもので、<span class="equation">\( A_1, A_1+A_2, A_1+A_2+A_3, ...  \)</span>のような配列を持てば、<span class="equation">\( O(1) \)</span>で区間の和を求めることができます。しかし、BITのアイデンティティは値の変更が出来ることです。</p>
+<div id="BIT-3" class="image">
+<img src="images/kentand/BIT-3.png" alt="一点更新" class="width-095per" />
+<p class="caption">
+図7.6: 一点更新
+</p>
+</div>
+<p>図のように、<span class="equation">\( A_5 \)</span>一つを変更することを考えます。累積和の場合、<span class="equation">\( A_5 \)</span>が関与している要素は<span class="equation">\( N-4 \)</span>個あります。つまり、値の変更に<span class="equation">\( O(N) \)</span>かかってしまいます。すると、値に<span class="equation">\( A_5 \)</span>が関与しているのは図の青い部分だけです。そして、これはどの<span class="equation">\( A_i \)</span>に対しても、関与している要素は各段に最大一つなので、約log N個です。つまり、青い部分の変更だけで済むため、<span class="equation">\( O(\log N) \)</span>で値の変更ができます！</p>
+<p>しかし、これは足し算、引き算のみで使えます。それではあまりに機能が少ないですね？そこで、BITよりも動作は少し増えますが、他の演算にも使えるようにしたのが次のものです。</p>
+
+<h2><a id="h7-7"></a><span class="secno">7.7　</span>Segment Tree</h2>
+<p>通称「セグ木」です。BITのところの最後にも述べたように、これはBITみたいなことが他の演算(例外はあり)でも使えるようにしたものです。</p>
+
+<h3 id="E"><a id="h7-7-1"></a>しくみ</h3>
+<p>やることはBITと似ていますが少し違います。ここでは、扱う演算を最大公約数とします。セグ木ではBITと違って下図の全ての範囲を使います。</p>
+<div id="segtree-1" class="image">
+<img src="images/kentand/segtree-1.png" alt="BITのようにした配列" class="width-095per" />
+<p class="caption">
+図7.7: BITのようにした配列
+</p>
+</div>
+<p>BITと同じように、一番下の段に普通の配列、下から二番目に<span class="equation">\( A_1とA_2 \)</span>、<span class="equation">\( A_3とA_4 \)</span>...の演算結果を示します。すると、最大公約数で配列{12,18,4,8,36,18,48,72}を例にとると、上図のようになります。</p>
+<p>そして、BITでやったような区間の演算は次のようにして求めます。これはBITとは少し違うところです。</p>
+<div id="segtree-2" class="image">
+<img src="images/kentand/segtree-2.png" alt="区間演算" class="width-095per" />
+<p class="caption">
+図7.8: 区間演算
+</p>
+</div>
+<p>BITでは、lからrまでの区間和を求めるときに、<span class="equation">\( 1~l-1 \)</span>番目までの和、<span class="equation">\( 1~r \)</span>番目までの和を出していましたが、今回は、<span class="equation">\( 1~l-1 \)</span>番目までの最大公約数、<span class="equation">\( 1~r \)</span>番目までの最大公約数を出したとしても、その二つを使ってl~r番目の最大公約数を求めることは出来ません。だから、直接<span class="equation">\( l~r \)</span>番目の最大公約数を求めるために、上図のようにします。よって、BITと違い配列部分の全てを使う必要があるわけです。</p>
+<p>次に、値を一つだけ更新するときを考えます。</p>
+<div id="segtree-3" class="image">
+<img src="images/kentand/segtree-3.png" alt="一点更新" class="width-095per" />
+<p class="caption">
+図7.9: 一点更新
+</p>
+</div>
+<p>これは、BITと同じように下を変更した後に、それが関与する要素を更新していきます。ここでBITと違うのは、和ではないため更新した隣の値(図の黄色部分)が必要になることがあるということです。</p>
+<p>これらの計算量は、オーダー記法だとBITと同一ですが、定数倍の差でこちらが少し遅いです。</p>
+
+<h2><a id="h7-8"></a><span class="secno">7.8　</span>bit全探索</h2>
+<p>これは集合の操作が簡単にできるアルゴリズムです。さっき紹介したBITとは違います。これは、最初に述べたビットの概念を使ったアルゴリズムです。</p>
+
+<h3 id="A"><a id="h7-8-1"></a>どんなことができるの？</h3>
+<p>例えば、4種類のグッズがあり、それぞれについて買うか買わないか決めることができるとします。このとき、買い方は<span class="equation">\( 2^4 \)</span>通りあります。人間ならば、「これとこれを買って、残りを買わない」といったふうに情報を管理できますが、コンピュータで実装するときは、愚直に再現しようとすると、4個買うか買わないかの値を管理しなければなりません。これは大変ですね？そこで活躍するのがbit全探索です。これを使えば、数一つで集合の再現、探索ができます！</p>
+
+<h3 id="B"><a id="h7-8-2"></a>しくみ</h3>
+<p>といってももはやこれはアルゴリズムというより表現法ですね。</p>
+<div id="bit_search" class="image">
+<img src="images/kentand/bit_search.png" alt="集合と数" class="width-095per" />
+<p class="caption">
+図7.10: 集合と数
+</p>
+</div>
+<p>先程のグッズの例で表します。「買わない」= 0、「買う」= 1として表すと、図のように4つとも買わない場合は、0000と表されます。同じように、2個目と4個目を買うときは0101、2個目と3個目を買うときは0110と表されます。この表記、ビットっぽいと思いませんか？</p>
+<p>これをビットと見立てて数にすると、「0000」= 0、「0101」= 5、「0110」= 6となります。よって、集合を一つの数で表すことができます。逆に考えると、「0000」= 0から「1111」= 15まで全ての数を調べれば、全ての集合を調べたことになります。つまり、ビットによる表記を使えば、メンドクサイ集合の全探索も、一つの数を使うだけで簡潔に探索する事ができます。</p>
+
+<h2><a id="h7-9"></a><span class="secno">7.9　</span>bitDP</h2>
+<p>これも集合に対する操作シリーズです。これはまず説明する前に具体例を見てください。</p>
+<div class="lead">
+<p>  巡回セールスマン問題</p>
+<p>  <span class="equation">\( N \)</span>個の街があり、<span class="equation">\( M \)</span>個の街と街を結ぶ街道があります。  <span class="equation">\( M \)</span>個の街道を渡るには、それぞれ<span class="equation">\( T_i(1 < i < M) \)</span>の時間がかかります。  セールスマンは、一つ目の都市から出発し、<span class="equation">\( N \)</span>個全ての都市をまわろうと考えています。  このとき、セールスマンが全ての都市を回る最短時間はいくらでしょうか？</p>
+</div>
+<p>まずは普通に考えてみましょう。セールスマンは都市のまわる順番を自由に選ぶことが出来ます。なので、全ての順番の選び方について、最短となるルートを選べば答えが出そうです。このとき、このやり方の計算量は、順番を全探索するので<span class="equation">\( O(N!) \)</span>かかります。つまり<span class="equation">\( 1 \times 2 \times 3 \times \cdots \times N \)</span>ということです。しかし、このやり方はとても非効率です。一般的なコンピュータで一瞬(1秒くらい)で終わるのは大体<span class="equation">\( 10^8 \)</span>回程度の計算ですが、<span class="equation">\( 12! = 479001600 \)</span>なので、<span class="equation">\( N=12 \)</span>程度でも処理が遅くなってきます。そこで活躍するのがbitDPです。</p>
+
+<h3 id="C"><a id="h7-9-1"></a>どんなことができるの？</h3>
+<p>これはこの問題のような動作を<span class="equation">\( O(N!) \)</span>から<span class="equation">\( O(N^2 2^N) \)</span>まで改善可能です。こうすると大体<span class="equation">\( N=20 \)</span>程度まで一瞬で動作が終わる範囲となります。「あんまり変わってない...」と思いますね？　あんまり変わってません。しかし、<span class="equation">\( N \)</span>がより増えるにつれて増加する計算量もこちらが抑えられます。</p>
+
+<h3 id="D"><a id="h7-9-2"></a>しくみ</h3>
+<p>まず次の様な都市があったとします。</p>
+<div id="bitdp-1" class="image">
+<img src="images/kentand/bitdp-1.png" alt="都市の例" class="width-095per" />
+<p class="caption">
+図7.11: 都市の例
+</p>
+</div>
+<p>例えば、セールスマンが[1→2→4→5→3]の順でまわるときと[1→4→2→5→3]の順でまわるときについて考えます。それぞれの道筋を矢印で示します。この場合は[1→4→2→5→3](青矢印)の方が速いですが、この矢印を見たときに、4～3の区域は二回探索しています。もう距離が分かり切っているのに二回探索するのは無駄な気がしますね？</p>
+<div id="bitdp-2" class="image">
+<img src="images/kentand/bitdp-2.png" alt="道筋" class="width-095per" />
+<p class="caption">
+図7.12: 道筋
+</p>
+</div>
+<p>この場合は[1→4→2→5→3](青矢印)の方が速いですが、この矢印を見たときに、4～3の区域は二回探索しています。もう距離が分かり切っているのに二回探索するのは無駄な気がしますね？そして、この場合、4までめぐるのが速い方が最短となりますね？つまり、それぞれの都市への最短時間は、めぐってきた順番には影響せず、めぐってきた都市の集合と今どこの都市にいるかだけに依存します。</p>
+<div id="bitdp-3" class="image">
+<img src="images/kentand/bitdp-3.png" alt="bitDPの考え" class="width-095per" />
+<p class="caption">
+図7.13: bitDPの考え
+</p>
+</div>
+<p>なので、図のように1,2,4にはすでにめぐっており、都市4にいるときの最短が分かれば、残りの探索は一回で済みます。</p>
+<p>このとき、集合を情報として持つのに便利なのがビットです。「どこにめぐったか」という情報を持つのにビットを使います。</p>
+<p>あまりにもビットが関係する部分が少ないですが、名にbitを冠するので紹介しました。</p>
+
+<h2><a id="h7-10"></a><span class="secno">7.10　</span>おまけ：三分探索</h2>
+<p>これまで二分探索やビットという「2」という数字を扱う世界で説明していました。しかし、二分探索でも求められないようなものがあります。凸関数の極値などです。そもそも二分探索は配列が小さい順に並んでいることが前提ですが、凸関数は小さい順に並んでなどいません。そこで三分探索を使います。</p>
+
+<h3 id="H"><a id="h7-10-1"></a>どんなことができるの？</h3>
+<p>これは関数の極値が定義域に高々一個しかないときに、その極値の値を求められるというものです。「微分すればいいじゃん？」と思うかもしれません。はい、その通りです...しかし、三分探索の利点は、時間はかかるものの極値が一つならどんなものでも極値が求まります。式がとんでもなくて微分がめんどくさくてもなんとかなるのです。</p>
+
+<h3 id="I"><a id="h7-10-2"></a>しくみ</h3>
+<p>まずは適当なグラフを用意して三等分します。</p>
+<div id="sanbun-1" class="image">
+<img src="images/kentand/sanbun-1.png" alt="適当なグラフ" class="width-095per" />
+<p class="caption">
+図7.14: 適当なグラフ
+</p>
+</div>
+<p>ここで、三等分している赤の線の位置の値がどちらが小さいかを比べると、右の方が小さいですね？逆に言えば、これは極値が高々一個なので、一番左側の区域には最小値は存在しない(右にもっと小さいのがあるから)ので、左側の区間を消し、また残った区間を三等分します。</p>
+<div id="sanbun-2" class="image">
+<img src="images/kentand/sanbun-2.png" alt="左を消す" class="width-095per" />
+<p class="caption">
+図7.15: 左を消す
+</p>
+</div>
+<p>これはさっきのグラフから左を消したものです。さらに三等分してあります。そして、この赤い棒のうち値が小さいのは左の方です。なので一番右の区間を消します。</p>
+<p>このように、どんどん「最小値がない」と分かる区間を消していくと近似的に最小値を求めることが出来ます。</p>
+
+<h2><a id="h7-11"></a><span class="secno">7.11　</span>あとがき</h2>
+<p>いかがでしたか？ビットや二分探索(?)アルゴリズム達は。しかし、これはほんの一部で、このジャンルだけでもまだまだたくさんのアルゴリズムが存在します。例えばC++のstd::set、ダブリング等様々です。これらはいずれも二分探索やビットとは言いづらくとも、「2」という数字が鍵を握るアルゴリズムです。皆さんも是非調べて見てください！今回はあまり量も書けませんでしたし、厳密な実装も載せられませんでしたが、またの機会ではそれもしたいと思っています。では締め切りがもうすぐなのでこれで。</p>
+
+<h2><a id="h7-12"></a><span class="secno">7.12　</span>参考</h2>
+<p>http://hos.ac/slides/20140319_bit.pdf</p>
+      </div>
+      <div class="navs">
+        <nav class="book-navi book-prev">
+                    <a href="stranger_86952.html">
+            <div class="book-cursor"><span class="cursor-prev">◀ レシート記述言語で遊ぶ</span></div>
+          </a>
+                  </nav>
+        <nav class="book-navi book-next">
+                    <a href="tea.html">
+            <div class="book-cursor"><span class="cursor-next">▶ 万年カレンダーを実装する</span></div>
+          </a>
+                  </nav>
+      </div>
+    </div>
+  </div>
+  <footer>
+      </footer>
+  <script>
+    (function() {
+      if (!window.katex) { return; }
+      var equations = [].slice.call(document.querySelectorAll(".equation"));
+      for (var i = 0; i < equations.length; i++) {
+        katex.render(equations[i].textContent, equations[i]);
+      }
+    }) ();
+  </script>
+</body>
+</html>

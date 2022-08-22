@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4970457-1"></script>
+  <script>
+    if (document.domain === 'www.npca.jp') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-4970457-1');
+    }
+  </script>
+  <script type="text/javascript" id="MathJax-script" async="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="next" title="たのしいビット・二分探索アルゴリズムの世界" href="kentand.html"><link rel="prev" title="初めてのwebアプリ作成" href="nisnah.html">  <meta name="generator" content="Re:VIEW" />
+  <title>レシート記述言語で遊ぶ | 灘校パソコン研究部部誌2022</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="book">
+    <nav class="side-content">
+      <h1>灘校パソコン研究部部誌2022</h1>
+      <ul class="book-toc">
+<li><a href="index.html">TOP</a></li>
+<li><a href="dekabutsu.html">第1章　TOTPをC#で生成する</a></li>
+<li><a href="chito.html">第2章　ゼロから作る量子コンピューター</a></li>
+<li><a href="maguro.html">第3章　i3 window managerを使ってみよう</a></li>
+<li><a href="sug.html">第4章　応用情報技術者試験の対策について</a></li>
+<li><a href="nisnah.html">第5章　初めてのwebアプリ作成</a></li>
+<li><a href="stranger_86952.html">第6章　レシート記述言語で遊ぶ</a></li>
+<li><a href="kentand.html">第7章　たのしいビット・二分探索アルゴリズムの世界</a></li>
+<li><a href="tea.html">第8章　万年カレンダーを実装する</a></li>
+</ul>
+      <p class="review-signature">powered by <a href="http://reviewml.org/">Re:VIEW</a></p>
+    </nav>
+    <div class="book-body">
+      <header>
+      </header>
+      <div class="book-page">
+        <h1><a id="h6"></a><span class="secno">第6章　</span>レシート記述言語で遊ぶ</h1>
+<p><p style="text-align:right">78回生 stranger\_86952</p></p>
+
+<h2><a id="h6-1"></a><span class="secno">6.1　</span>初めに</h2>
+<p>78回生のstranger_86952です。中1でパソ部に入って以来、競プロ、web開発、Python、シェルスクリプト、レシート記述言語など色々やってきました。次は何をやろうかとネットを彷徨っていたところ、Twitterでレシート記述言語という奇妙な言語の存在を知ったので今回はこいつを使って遊んでいきます。</p>
+
+<h3><a id="h6-1-1"></a>レシート言語って何</h3>
+<p>日本語や英語などの喋る言語ではありません。ただしC++やJavaのような複雑な処理はせず、レシートを書くだけです。言語によってできることは様々ですが、今回はレシートを書くための専用の言語(?)があると知ったのでこれを使って遊びます。</p>
+
+<h3><a id="h6-1-2"></a>具体的に何の言語を使うの</h3>
+<p>今回使うレシート記述言語はReceiptLineという言語です。<a href="https://www.ofsc.or.jp/receiptline_/" class="link">ReceiptLineの公式サイト</a>公式サイトでコードを実行することができ、なんとサンプルまで置いてくれています。もちろんReceiptLineの学習サイトなどはありませんが、このサンプルを見ながらレシートを極めたいと思います。</p>
+
+<h2><a id="h6-2"></a><span class="secno">6.2　</span>ReceiptLineの環境開発(?)</h2>
+
+<h3><a id="h6-2-1"></a>インストール</h3>
+<p>ブラウザで実装するものかと思っていたのですが、色々探しているとインストールしろみたいなことが書いてあったので一応入れます。入れなくても良いのですが印刷するためには入れた方が良いらしいです。印刷する必要がない方は飛ばしても良いかもしれません。</p>
+<div class="cmd-code">
+<pre class="cmd"><span class="gp">$</span><span class="w"> </span>npm <span class="nb">install </span>receiptline
+</pre>
+</div>
+<p>でインストールできます。数秒でインストールできました。node.jsをまだ入れていない人はnpmコマンドが使えないので先にダウンロードしてください。</p>
+
+<h3><a id="h6-2-2"></a>公式コンテンツ</h3>
+<p>前述の通り学習サイトなどはないので自分で勉強するしかありません。言語の使用目的がレシート記述だけなのである程度関数や文法は限られていると思いますが、それでも1から探るのは大変です...とりあえず公式サイト、githubなどからコードを拾います。公式サイトの日本語サンプルを<a href="https://www.ofsc.or.jp/receiptline_/example/data/ja.zip" class="link">ダウンロード</a>します。ダウンロードしたコードや書いたコードは<a href="https://www.ofsc.or.jp/receiptline_/designer/index.html" class="link">ブラウザ</a>で可視化できます。</p>
+
+<h2><a id="h6-3"></a><span class="secno">6.3　</span>文法を学ぶ</h2>
+
+<h3><a id="h6-3-1"></a>ReceiptLineの文法</h3>
+<p>文法と言ってもfor文やif文はありませんし、この部誌を書くのに使ってるRe:VIEWの方が難しいぐらいです。文法自体は公式サイトにも載っていますしすでに知ってる人は飛ばしてください。</p>
+
+<h3><a id="h6-3-2"></a>サンプルを見る</h3>
+<p>とりあえず一番上にあるcolumn_border1.txtを開きます。公式の実装環境(2行上のリンクです)でファイルを開くか中身をコピペすると右にプレビューが映ります。写真のような状態になっていると思います。</p>
+<div id="img01" class="image">
+<img src="images/stranger_86952/img01.png" alt="" class="width-100per" />
+<p class="caption">
+図6.1: 
+</p>
+</div>
+<p>またコードは以下の通りです</p>
+<div id="id_01.txt" class="code">
+<p class="caption">リスト6.1: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>{border: space; width: * 4 8}
+-
+|品名|数量|金額|
+-
+塩ゆで落花生 | 1| 500
+田無キャベツ塩だれ | 1| 500
+信州レタスのサラダ | 1| 500
+石垣苺ロール | 1| 500
+伊達の桃ジュース | 1| 500
+-
+</pre></td></tr></tbody></table>
+</div>
+<p>合計や店名などの情報もなく、現状だとただの表のような見た目です。コードを1行目から順に見ていくと線の種類を制御できそうな項目があるので書き換えてみます。実際に以下のように書き換えて見るとただの横線が周りを囲むようになりました(ちなみにこれはcolumn_border2.txtと一致します)。</p>
+<div id="id_02.txt" class="code">
+<p class="caption">リスト6.2: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>{border: line; width: * 4 8}
+</pre></td></tr></tbody></table>
+</div>
+<p>ただ、実際のレシートは周りを囲むような線はないのでここは変える必要ないかもしれません。また横にwidthの項目もあるのでいじってみます。数字をとりあえず4の部分を他の数字に変えてみますが、4の時に改行がなくてちょうど良いということしかわかりませんでした。一旦3つ全て*にするとなんとなくわかってきます</p>
+<div id="id_03.txt" class="code">
+<p class="caption">リスト6.3: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>{border: line; width: * * *}
+</pre></td></tr></tbody></table>
+</div>
+<p>三等分になりました。全て15にした場合も三等分になりました。基本的に同じ数字の場合は同じ幅になるようです。また*の場合は綺麗な三等分になりましたが、数字が小さいとレシート自体が細長くなっています。試しに10 5 5のように書き直すと以下のようになります。</p>
+<div id="img02" class="image">
+<img src="images/stranger_86952/img02.png" alt="" class="width-100per" />
+<p class="caption">
+図6.2: 
+</p>
+</div>
+<p>単純に横幅を示していたようです。<a href="https://www.ofsc.or.jp/receiptline_/readme_jp.html" class="link">こちらのサイト</a>にreceiptlineの文法がまとめられていますが、これをみると*や数字以外にもautoを指定できるみたいです。10 5 5からauto 5 5に変えて見るとただの3等分になりました。autoの場合は無条件に等分するのでauto以降の数字が無視されています。今まで10 5 5のように3つの数字を指定していたのは品名,数量,金額の3つを書いていたからですが、autoを指定すればこの項目の数に関わらず等分できます(column_width1.txt)。column_width5.txtを開くとわかりますが、スペースではなくコロンで指定する値を区切ることができます。その場合以下のように何も指定しない項目を作ることができますがそうするとその項目は0と見なされて見えなくなります。</p>
+<div id="id_04.txt" class="code">
+<p class="caption">リスト6.4: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>{width:*,,2}
+</pre></td></tr></tbody></table>
+</div>
+<div id="img03" class="image">
+<img src="images/stranger_86952/img03.png" alt="" class="width-100per" />
+<p class="caption">
+図6.3: 
+</p>
+</div>
+<p>ところで最初のコードの2行目や4行目、10行目にハイフンがありますが、これは横線を表ています。ハイフンの場合ただの横線ですが、もう一つバリエーションがあります。</p>
+<div id="id_05.txt" class="code">
+<p class="caption">リスト6.5: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre>{border: space; width: * 4 8}
+=
+|品名|数量|金額|
+-------
+~塩ゆで落花生 | 1| 500
+===
+_田無キャベツ塩だれ | 1| 500
+--a--
+"信州レタスのサラダ | 1| 500
+==== ====
+`石垣苺ロール | 1| 500
+      -
+^伊達の桃ジュース | 1| 500
+~~~~~~~~~~~~~~~~~~ =
+</pre></td></tr></tbody></table>
+</div>
+<p>このコードは写真のようになります。</p>
+<div id="img04" class="image">
+<img src="images/stranger_86952/img04.png" alt="" class="width-100per" />
+<p class="caption">
+図6.4: 
+</p>
+</div>
+<p>イコールは切り取り線を表ていました。ハイフンとイコールは何個も続けて書くことができますが1個の時と見た目は変わりません。途中にスペースや別の文字があるとただの文字として認識されてしまいます。またコードの中に~_&quot;`^などの文字がありますがこれらはそれぞれ意味を持っていて、</p>
+<div id="t01" class="image">
+<img src="images/stranger_86952/t01.png" alt="" class="width-100per" />
+<p class="caption">
+図6.5: 
+</p>
+</div>
+<p>です。また^個まで設定できますが基本的にそんなに使わないと思います。7個指定するとめっちゃ読みにくかったです...具体的にはsampleのtext_decoration.txtを見ればわかりやすいと思います。</p>
+<div id="img05" class="image">
+<img src="images/stranger_86952/img05.png" alt="" class="width-100per" />
+<p class="caption">
+図6.6: 
+</p>
+</div>
+<p>あと何気に触れてませんでしたがバーティカルバーにも意味があります。下の例を見れば大体わかると思います。</p>
+<div id="id_06.txt" class="code">
+<p class="caption">リスト6.6: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>{border: space; width: * 4 8}
+|品名|数量|金額|
+-
+塩ゆで落花生|1|100
+ 塩ゆで落花生|1| 200
+|塩ゆで落花生|1|300|
+|塩ゆで落花生|1|400 |
+| 塩ゆで落花生|1|500|
+| 塩ゆで落花生 |1|600|
+</pre></td></tr></tbody></table>
+</div>
+<div id="img06" class="image">
+<img src="images/stranger_86952/img06.png" alt="" class="width-100per" />
+<p class="caption">
+図6.7: 
+</p>
+</div>
+<p>こんなレシートが存在するかはともかく、基本的には両端にもバーティカルバーをつけた方が描きやすいイメージでした。300円の行と600円の行はそれぞれの要素が中央にありますが、基本的にスペースを使わないか両端にスペースを打つかで先端に持っていけます。また400円の行と500円の行を見るとわかりますが、スペースがない方に偏るようです。これは両端にバーティカルバーをおいていない場合も同様です。ただ両端にバーティカルバーがない場合、両端の要素はそれぞれ中央に持っていくことができないのでやはり300円の行がベストな気がします。金額など中央に揃える必要がない項目はスペースで右端に持っていくのもアリかもしれません。</p>
+<p>さて、実はこれでcredit2.txtまでの内容は基本的に網羅したことになるので次に見ていくのはguest.txtです。ここからは一気に現実にありそうなレシートになって行きます。</p>
+<div id="id_07.txt" class="code">
+<p class="caption">リスト6.7: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="rouge-code"><pre>`~~新　規~~|
+{image:iVBORw0KGgoAAAANSUhEUgAAAIAAAABAAQMAAADoGO08AAAABlBMVEUAAAD///+l2Z/dAAAAaUlEQVQ4y2P4jwYYRgUGh8AHBgY7BgbmAwwMFQwM/ECBBwwMMkCBBgaGAlwC///IyP//3/z//4d6sBlECwDNQBIAmgYyFEXgALoA0IgCFDPwCQBdChQ4gOJ0FAGQbyECPyACo8lhSAgAACgAlSKnht6nAAAAAElFTkSuQmCC}
+|テーブル | A05|伝　　票 | 0003-01|
+|時　　刻 | 19:00|人　　数 | 2|
+{width:3,*,4,9; border:line}
+-
+||品名|数量|金額|
+-
+|^^□|^^ビール |  ^^^2|  ^^1,300|
+|^^□|^^千鳥コース |  ^^^2| ^^17,280|
+-
+{width:10,18; align:right}
+|小   計| 18,580|
+|ｻｰﾋﾞｽ料| 0|
+-
+|^^^合計| ^^^18,580|
+-
+{width:*; border:none; align:center}
+{code:0003; option:code39,48}
+</pre></td></tr></tbody></table>
+</div>
+<div id="img07" class="image">
+<img src="images/stranger_86952/img07.png" alt="" class="width-100per" />
+<p class="caption">
+図6.8: 
+</p>
+</div>
+<p>まず{image:}の部分は明らかに画像を埋め込んでいます。この画像の埋め込み方ですが、Base64で埋め込まないといけないので埋め込みたい画像を一度変換しないといけません。詳しくは省きますが調べると出てくるので適当なサイトで変換して貼り付けましょう。また下の方にalginという項目が出てきてていますがこの例だとわかりにくいので一旦省略します。そして気になるのはやはりバーコードの部分です。<a href="https://www.ofsc.or.jp/receiptline_/designer/index.html" class="link">最初に紹介したサイト</a>には上に専用のボタンがあるため簡単に作ることができます。ただ、仕組みは理解しといた方がスムーズなので色々調べました。とりあえずcode:を見ると0003と書かれていますがこれがなかなか厄介です。適当に書き換えるとバーコードが変わっていくのがわかると思いますが、どういう法則なのかわかりません。一応公式サイトにも説明が書いてあるのですが、</p>
+<div id="t02" class="image">
+<img src="images/stranger_86952/t02.png" alt="" class="width-100per" />
+<p class="caption">
+図6.9: 
+</p>
+</div>
+<p>みたいな説明しかなくて有識者じゃないとわかりにくいです。そこでCODE93などのバーコード事態の意味を調べて書き直しました。</p>
+<div id="t03" class="image">
+<img src="images/stranger_86952/t03.png" alt="" class="width-100per" />
+<p class="caption">
+図6.10: 
+</p>
+</div>
+<p>イメージ的にはcode:で指定した値(文字列)をCODE93やitfなどの規則に従って変換している感じです。なので他の商品のバーコードをReceiptLineで書き起こすときはcode:で値を書いた後に文字数などからどのバーコード形式なのか判別してoptionで指定すれば良いです。ただcode:で値を書くときはCODE39などいくつか注意しないといけない点があるのでそれは気をつけてください。ちなみに先ほどの例ではoption:code39の後に48と書かれていますがこれはただの大きさです。バーコードについてはなんとなくわかったと思いますがまだ2次元QRコードがあります....QRコードはsampleを見つけられなかったので適当に用意しました。とりあえずオプションは以下の通りです。</p>
+<div id="t04" class="image">
+<img src="images/stranger_86952/t04.png" alt="" class="width-100per" />
+<p class="caption">
+図6.11: 
+</p>
+</div>
+<p>複雑なものはないと思います。バーコードの時と違ってオプションが少なくてわかりやすいです。QRコードのリンクはバーコードの時と同様code:で指定しますが、ここをurlにするとそのwebサイトにアクセスさせれます。今回の部誌のリンクも同じです。url以外の場合はその値を検索できます。urlはhttpのサイトでも繋がりました。訂正レベルは何も指定しないときはlになっていて、当然ですがレベルを上げるほどQRコードも複雑になります。サンプルは以下の通りです。プレビューも載せておくのでぜひアクセスしてみてください！(コード見えてるからわかるけど)</p>
+<div id="id_08.txt" class="code">
+<p class="caption">リスト6.8: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>素晴らしいQRコード
+
+{code:https://fest.nada-sc.jp/2022/; option:qrcode,8}
+</pre></td></tr></tbody></table>
+</div>
+<div id="img08" class="image">
+<img src="images/stranger_86952/img08.png" alt="" class="width-100per" />
+<p class="caption">
+図6.12: 
+</p>
+</div>
+<p>これで大体の文法は終わりました。あとは細かい文法が残ってるのでそれだけやったらReceiptLineは一通りクリアしたことになります！まずは|や{などのコードで使う文字を表示する方法です。\をつけるだけです。\nなどの正規表現も一部対応しているようです。</p>
+<div id="id_09.txt" class="code">
+<p class="caption">リスト6.9: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>\\
+\|
+\{
+\n
+etc...
+</pre></td></tr></tbody></table>
+</div>
+<div id="img09" class="image">
+<img src="images/stranger_86952/img09.png" alt="" class="width-100per" />
+<p class="caption">
+図6.13: 
+</p>
+</div>
+<p>次にtext_wrap3.txtをみるとtextという項目がありますがこれは2通りしかありません。</p>
+<div id="id_10.txt" class="code">
+<p class="caption">リスト6.10: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>{text: nowrap}
+NPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCANPCA
+{text: warp}
+ReceiptLineReceiptLineReceiptLineReceiptLineReceiptLineReceiptLineReceiptLineReceiptLineReceiptLineReceiptLineReceiptLineReceiptLine
+</pre></td></tr></tbody></table>
+</div>
+<div id="img10" class="image">
+<img src="images/stranger_86952/img10.png" alt="" class="width-100per" />
+<p class="caption">
+図6.14: 
+</p>
+</div>
+<p>改行するか改行しないかですね。通常だと改行する方(warp)になっています。</p>
+
+<h2><a id="h6-4"></a><span class="secno">6.4　</span>遊ぶ！！！！</h2>
+
+<h3><a id="h6-4-1"></a>適当になんか選んで再現してみる</h3>
+<p>長い長い文法説明が終わってようやく本編に入れます....ReceiptLineはご存知の通りレシート記述言語です。ということでまずはレシートを再現してみます。そのあと架空のレシートを作って遊びます。今回再現するレシートはこれです(親からもらいました)。</p>
+<div id="img11" class="image">
+<img src="images/stranger_86952/img11.png" alt="" class="width-100per" />
+<p class="caption">
+図6.15: 
+</p>
+</div>
+<p>最初のアイコンと点線の再現がかなり面倒臭そうですがとりあえず作ってみます。</p>
+<div id="id_11.txt" class="code">
+<p class="caption">リスト6.11: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+</pre></td><td class="rouge-code"><pre>{width: 1,*}
+| |^^Hospitality Restaurant |
+{width: *,1}
+| ^^^^Royal Host| |
+
+
+
+
+{width: 3,*,3}
+| |東神戸店 | |
+| |兵庫県神戸市東灘区 | |
+| |住吉東町４ー７ー１６ | |
+| |TEL０７８ー８４２−２３３２ | |
+| |店No-0000000000001-0001 | |
+| |2022/04/28（木）18:19 | |
+| |伝票No-01371 | |
+{width: 3,*,3,3}
+| |テーブルA０８ | 1名| |
+
+| |Eat-In | |
+{width: 6,*,*,6}
+| |パンケーキ | ￥495| |
+| |スープセット | ￥594| |
+| |割Cあんみつ | ￥528| |
+-
+
+{width: 3,*,*,*,3}
+| |^"合計 |3点 | ^￥1617| |
+| |("内消費税等|| ￥147)| |
+| |"10%対象|| ￥1617| |
+| |("標準税率|| ￥147)| |
+| |"現金お預かり|| ￥5,000| |
+| |^"お釣り|| ^￥3,383| |
+
+{width: 3,*,*,3}
+| |("領収書対象金額 | ^￥1,617)| |
+
+{width: 3,*,*,*,3}
+| |会計担当|1 || |
+| |No0115140||| |
+
+{width: 3,*,3}
+| |`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~| |
+| |`~~~~~~~~ロイヤルデリに関する~~~~~~~~| |
+| |`~アンケートに答えてクーポンゲット！~| |
+| |`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~| |
+
+{code:https://www.shoproyal.jp/shop/a/aroyalhost/;option:qrcode 4}
+| |https://www.shoproyal.jp/shop/a/aroyalhost/| |
+{width: 35;border:line}
+|`ロイヤルデリオンラインサイト|
+|でのお買い物が|
+|"200円"引き|
+{width:6,2,*,6;border:none}
+
+| |・|ロイヤルデリオンラインサイト限定でご利用いただけます。 | |
+| |・|ロイヤルホスト店舗およびロイヤルグループ店舗での_ご飲食・テイクアウト＆デリバリー・売店商品（ロイヤルデリ含む）_ではご利用いただけません。 | |
+| |・|お買い物には会員登録が必要です。 | |
+| |・|他のクーポンとの併用はできません。 | |
+| |・|パケット通信量はお客様負担となります。 | |
+
+
+
+
+</pre></td></tr></tbody></table>
+</div>
+<div id="img12" class="image">
+<img src="images/stranger_86952/img12.png" alt="" class="width-100per" />
+<p class="caption">
+図6.16: 
+</p>
+</div>
+<div id="img13" class="image">
+<img src="images/stranger_86952/img13.png" alt="" class="width-100per" />
+<p class="caption">
+図6.17: 
+</p>
+</div>
+<div id="img14" class="image">
+<img src="images/stranger_86952/img14.png" alt="" class="width-100per" />
+<p class="caption">
+図6.18: 
+</p>
+</div>
+<p>かなり近い見た目になった気がします。結局アイコンはただの文字列に、点線は直線になってますがぱっと見一緒なので大丈夫です(?)作っていて思ったのが・フォントが単調・点線が実装できない・角が丸い黒塗りができない・文字をもっと小さくしたい・リスト化したときに自動で改行して欲しかった(別の方法で解決できる)などですね。とは言え他にレシートを書くことに特化したツールがあるわけでもないのでかなり便利でした。本家と比べてもそこまで違和感はなかったので嬉しいです。</p>
+
+<h3><a id="h6-4-2"></a>オリジナルでレシートを作る</h3>
+<p>とりあえず再現はできたので次は適当に作って遊びます。それっぽく作りましたが反省点が多いですね...</p>
+<div id="id_12.txt" class="code">
+<p class="caption">リスト6.12: </p>
+<table class="highlight rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="rouge-code"><pre>{image:iVBORw0KGgoAAAANSUhEUgAAAJYAAAAyCAAAAACb533GAAAABGdBTUEAALGPC/xhBQAAANJpQ0NQSUNDIFByb2ZpbGUAABiVY2BgrEgsKMhhEmBgyM0rKXIPcoyMiIxSYL/KwM7AyAAGicnFBY4BAT4MOMG3axC1l3VBZuFWhxWwpKQWJwPpLUBcmlxQVMLAwKgDZKuXlxSA2CFAtkh2SJAzkJ0BZPNB1YOAtHNiTmZSUWJJaoqCe1FipYJzfk5+UXFBYnIqia4gApSkVpSAaOf8gsqizPSMEgVHoG9TgXbmFpSWpBbpKHjmJesxMIDCD6LjcyA4XBjFziSXFpVBjWFkMmZgAAARXTTFHXnTkQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAARGVYSWZNTQAqAAAACAACARIAAwAAAAEAAQAAh2kABAAAAAEAAAAmAAAAAAACoAIABAAAAAEAAACWoAMABAAAAAEAAAAyAAAAAFic5NgAAAFZaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8eDp4bXBtZXRhIHhtbG5zOng9ImFkb2JlOm5zOm1ldGEvIiB4OnhtcHRrPSJYTVAgQ29yZSA2LjAuMCI+CiAgIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiCiAgICAgICAgICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj4KICAgICAgICAgPHRpZmY6T3JpZW50YXRpb24+MTwvdGlmZjpPcmllbnRhdGlvbj4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+Chle4QcAAAR4SURBVFgJ7VnNTxQxFG/Zr1lgYWEF2QhEJWo0oiYgJsrBaOLFxIMXD3rRG2fv/gseDQeNf4FHD0QTjdGoMXBRMBwkoiLxA0SW/WB3prav7Uy788HusJsQwxymnb7fe+83r9Py24IJ2olXy04khVDURSv/CYbwkKGZiLkJz5E4pm355xp7Mlqd1yJmGQBt6Yiwamaw0VsSXDz8NYCLljU7DgDjxXGW374qn6ehnznTTtvlu6/YU/9gHAbZzfy7DP2xW33Cqpkl7tz5FELEw18DIFJ1VZ5xe8srU7P8ucfHz89bhFivj8gornbgZSXAim4vUX8zAAEAZxJkfEt09LUg5xBZbC7JpkRJL6e1ikFWZJoMGuAPADctJ0FAT+esAwkKtjJ0AAJMrm9LT9GsJ6MLIh+sWld0EB9N0HtIWh5hy1/fQ6rWOBJW5JsVpfrfMvDItR5tXdEhnKVLIiwtd1iyPsVppdtkUv+sOMGWM0K9w/ugVW44GqVMw1XLK+zqHA+eiEmrf1aE+TcdTSarq0XrReOEo+UVthjjtDC9xELyzWpXh2LtvtoJSUuGcMISmUC2DOKYpUONbcgNosbooWG7tOop3W61/oNqbXODqKcCKtbikrHwG0SlauE6sbm0rPWSndLM837XHppz4xuMT0+mXNsp6ER/WsWC5lHgmtnOUlMn95pLWgYuLXD1emkii0huCfzfvXOHuT3ajv3/+JCXP9RVSjY+uCNsOZKbuu/CmFf7MDL9BRfIQN9qkTuugDDgH88Dz6WobjDLBG8pA9WK6O6NePJ8B8/BqmzNpVWVrPZH30msPUQA0hi+YtcmP/8FkF1MFHuoWxFmW6I5gIpq6rg8JmmR5Yec1iBdaFK/hhDNA/qvamtlVU1YWz/eO2DTWsxwnxSVi1K/1i+a8cRhbd/KPX9QGxUVhZ1NnBjie2lhYcOL5tHT6nIgf76r+Wrsq+rUfkm7w+ipWlYJ6vvJ47YOjZaZ5F5qUCVOg7tq6gaH3k64XVr1VG+3Wv9BtXw3iC3ejW/elULBxkmdaJYsIYmRqonJ7yKHgmeTRHMlBzkWnnTLfczWiSszQ0ISI1UTkzWhIyuMV3jRbJfBq1PgovfxY7dxbnJ8nVuRlyZGcMi5lWgOuRIt/7NTZJUCJLE4nwxANOvsNPBkVFRX6gp3sbmeDlktj3ANHQq7EgNJyLNTf1D62F/6GeC+rPPvBgHeljptPTDN5qGzM2Knljox0hNLXYjDLBmGMhlSNDMP3D9xidHK9MTkSpZx/I50D01WGCS+XwJ525I6zFLhLJxF7r15goVNZ8TJJLXk3zwCwMEbfbHrF4FWhJ3OiousPJ1h3eQw0/IdZ0cYIupihfiRLgZ/hhcXKa/BEE4rMamttDjL/v+AMyc76M88K79BUSyETEw2v36E5dl9qgeX+UqTNghd/PILmPQPJNjvRJ5XQwgGbMxFi6bkZhC3Akkbq8J36YgBBh4VToUFRgUIq+PNAnCuOBZVZlZDKA9uWoqxsV3J1atC1Zn+ASNdasEG20SLAAAAAElFTkSuQmCC}
+|天空支店
+|浮遊都市SAGA神埼郡弥乃遺町１８ー４３
+
+|電話: 404-334-5791
+|領　収　書|
+|2038年 1月19日（火）3:14
+
+{width:*,10}
+|水素の潤い水 | ￥201|
+|30秒簡単麺〜正月スペシャル〜 | ￥582|
+|漫画:この国を変えたいんです！ | ￥729|
+|小形 3点| ￥1512|
+-
+|"合計 | "￥1512|
+|(内消費税等 | ￥230)|
+|"お預かり | "￥1552|
+|"お　　釣 | "￥40|
+</pre></td></tr></tbody></table>
+</div>
+<div id="img15" class="image">
+<img src="images/stranger_86952/img15.png" alt="" class="width-100per" />
+<p class="caption">
+図6.19: 
+</p>
+</div>
+<p>一番大きいのはアイコンの画質ですね。Base64変換したらめちゃくちゃ長くなってしまったのでpxを減らして対抗したのですがそのせいで明らかにぼやけています...他にも作っていて思ったのが、点線を描けないことが意外と不便ということです。現状直線と切り取り線しかありませんが実際のレシートではかなり点線が使われているのでこれはいつか追加されると良いですね。他にも文字の大きさを変えた方が良いとか色々問題点はあるかもしれませんがデザインが下手などはありますが店によってデザインは違うのでなんとかなってると信じたいです。あとは横幅が大きすぎてのっぺりしてる感じはありますが今後もレシートを作ることがあれば(あるのか？)改善したいです。</p>
+
+<h2><a id="h6-5"></a><span class="secno">6.5　</span>最後に</h2>
+<p>実際の店でレシートを発行するときにReceiptLineを使っているのかはわかりませんが書いていて面白かったです。レシート記述言語はTwitterでたまたま知っただけですが、他にもこういう系統の言語はあると思うのでまた触りたいです。普段はできることが多いPythonや処理が早いC++を使っていましたが、軽めの言語を完全に習得するのも楽しかったです。</p>
+      </div>
+      <div class="navs">
+        <nav class="book-navi book-prev">
+                    <a href="nisnah.html">
+            <div class="book-cursor"><span class="cursor-prev">◀ 初めてのwebアプリ作成</span></div>
+          </a>
+                  </nav>
+        <nav class="book-navi book-next">
+                    <a href="kentand.html">
+            <div class="book-cursor"><span class="cursor-next">▶ たのしいビット・二分探索アルゴリズムの世界</span></div>
+          </a>
+                  </nav>
+      </div>
+    </div>
+  </div>
+  <footer>
+      </footer>
+  <script>
+    (function() {
+      if (!window.katex) { return; }
+      var equations = [].slice.call(document.querySelectorAll(".equation"));
+      for (var i = 0; i < equations.length; i++) {
+        katex.render(equations[i].textContent, equations[i]);
+      }
+    }) ();
+  </script>
+</body>
+</html>

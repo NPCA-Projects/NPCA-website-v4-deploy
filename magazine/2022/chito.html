@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4970457-1"></script>
+  <script>
+    if (document.domain === 'www.npca.jp') {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-4970457-1');
+    }
+  </script>
+  <script type="text/javascript" id="MathJax-script" async="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+<link rel="next" title="i3 window managerを使ってみよう" href="maguro.html"><link rel="prev" title="TOTPをC#で生成する" href="dekabutsu.html">  <meta name="generator" content="Re:VIEW" />
+  <title>ゼロから作る量子コンピューター | 灘校パソコン研究部部誌2022</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="book">
+    <nav class="side-content">
+      <h1>灘校パソコン研究部部誌2022</h1>
+      <ul class="book-toc">
+<li><a href="index.html">TOP</a></li>
+<li><a href="dekabutsu.html">第1章　TOTPをC#で生成する</a></li>
+<li><a href="chito.html">第2章　ゼロから作る量子コンピューター</a></li>
+<li><a href="maguro.html">第3章　i3 window managerを使ってみよう</a></li>
+<li><a href="sug.html">第4章　応用情報技術者試験の対策について</a></li>
+<li><a href="nisnah.html">第5章　初めてのwebアプリ作成</a></li>
+<li><a href="stranger_86952.html">第6章　レシート記述言語で遊ぶ</a></li>
+<li><a href="kentand.html">第7章　たのしいビット・二分探索アルゴリズムの世界</a></li>
+<li><a href="tea.html">第8章　万年カレンダーを実装する</a></li>
+</ul>
+      <p class="review-signature">powered by <a href="http://reviewml.org/">Re:VIEW</a></p>
+    </nav>
+    <div class="book-body">
+      <header>
+      </header>
+      <div class="book-page">
+        <h1><a id="h2"></a><span class="secno">第2章　</span>ゼロから作る量子コンピューター</h1>
+<p><p style="text-align:right">76 回生 Chito</p></p>
+
+<h2><a id="h2-1"></a><span class="secno">2.1　</span>はじめに</h2>
+<p>76回の Chitoです。いつの間にか高2になってしまい焦っています。普段は、PythonやC++を使ったり、Linuxで遊んだりしています。最近、量子コンピューターについて興味を持ち始めたので、今回は、量子コンピューターの計算の仕組みをPython3でシミュレートしてみながら量子コンピューターの計算方法を自分の分かる範囲で紹介してみようと思います。</p>
+
+<h2><a id="h2-2"></a><span class="secno">2.2　</span>量子コンピューターとは</h2>
+<p>まず、量子とは「粒子と波の性質をあわせ持った、とても小さな、物質やエネルギー単位のこと」<a id="fnb-whatisQC" href="#fn-whatisQC" class="noteref" epub:type="noteref">*1</a>で量子力学の法則に従っています。そして、量子の物理状態を利用したコンピューターを「量子コンピューター」といいます。</p>
+
+<h2><a id="h2-3"></a><span class="secno">2.3　</span>コンピューターの種類</h2>
+<p>量子コンピューターに対して、普段私たちが使っているコンピューターを「古典コンピューター」といいます。さらに、任意の量子状態から任意の量子状態へと十分に高い精度で変換できるかとうかという「万能性 (エラー耐性)」、計算能力が古典コンピューターよりも上回っているかという「量子の優位性」、量子特有の物理状態を使用して計算を行うかどうかという「量子特有の物理状態」の3つの特徴の有無によって次のように分類できます。以降、特に注釈のない限り量子コンピューターは「万能量子コンピューター」を指すものとします。</p>
+
+<h2><a id="h2-4"></a><span class="secno">2.4　</span>量子ビット</h2>
+
+<h3><a id="h2-4-1"></a>量子ビットと古典ビット</h3>
+<p>まず、古典コンピューターと量子コンピューターの大きな違いは、コンピューターで扱う最小単位の「ビット」の仕組みにあります。古典コンピューターで扱うビット(いわゆるビット)は1ビットにつき「0」又は「1」のどちらかの状態しか持つことができないが、量子コンピューターで扱うビット(これをqbitという)は1ビットに「0」と「1」の両方の状態を確率的に「重ね合わせ」て持つことができ、量子状態を「測定」した時に初めて「0」か「1」かが決まります。この「重ね合わせ」の性質によって、量子コンピューターは古典コンピューターと異なり一度に複数の数の状態を保持できるので、桁違いに高速な計算が可能となることもあります。ただ、数値が確率的に存在するという量子コンピューター特有の性質により、得られる結果もまた、確定的なものではなく確率的なものとなってしまいます。</p>
+
+<h2><a id="h2-5"></a><span class="secno">2.5　</span>量子ビットの表し方</h2>
+<p>量子の状態は私たちには見ることができませんが、目に見えない量子の状態を視覚的、数学的に分かりやすくした表記方法があり、代表的なものに「ブロッホ球」と「ブラケット記法」というものがあります。では、それぞれ順番に紹介していきます。</p>
+
+<h3><a id="h2-5-1"></a>ブロッホ球</h3>
+<p>ブロッホ球とは、1量子ビットを視覚的にわかりやすく図示したものです。球面上の矢印のさす場所が量子ビットの状態を表し、矢印が真上を指すとき「0」、真下を指すとき「1」を表します。ただ、複数量子ビットになるとその分ブロッホ球をたくさん描かないといけないのでかえって見づらくなります。</p>
+<div id="Bloch1" class="image">
+<img src="images/chito/Bloch1.png" alt="" class="width-050per" />
+<p class="caption">
+図2.1: 
+</p>
+</div>
+
+<h3><a id="h2-5-2"></a>ブラケット記法</h3>
+<p>ブロッホ球の他に、量子ビットを表す際に「ブラケット記法」がよく使われます。ブラケット記法とは、量子の状態をベクトルを用いて表記する記法です。こうすることで、ベクトル同士の演算を見やすく表現することができ、ブロッホ球とは異なり複数ビットの場合でも分かりやすく表記することができます。また、1量子ビットの重ね合わせの状態<span class="equation">\( \ket{\psi} \)</span>をブラケット記法で表記すると下の様になります。</p>
+<div class="equation">
+$$    \ket{\psi} = \alpha\ket{0} + \beta\ket{1}\, 
+    (|\alpha|^2+|\beta|^2 = 1,\, \alpha,\beta \in \mathbb{C})$$
+</div>
+<p><span class="equation">\( \alpha \)</span>、<span class="equation">\( \beta \)</span>を複素確率振幅と言い、<span class="equation">\( |\alpha|^2 \)</span>、<span class="equation">\( |\beta|^2 \)</span>はそれぞれ測定した時に、「0」を示す確率、「1」を示す確率を表しています。</p>
+
+<h4><a id="h2-5-2-1"></a>多量子ビット</h4>
+<p>多量子ビットの場合も基本的には1量子ビットの場合と同じです。例えば、3量子ビットで1、2、3番目の量子ビットがそれぞれ<span class="equation">\( \ket{0} \)</span>、<span class="equation">\( \ket{1} \)</span>、<span class="equation">\( \ket{0} \)</span>と確定している時、<span class="equation">\( \ket{0} \)</span><span class="equation">\( \ket{1} \)</span><span class="equation">\( \ket{0} \)</span>と表すことができます。また、これを<span class="equation">\( \ket{010} \)</span>と省略することがよくあります。1量子ビットの時と同じように3量子ビットを数式で表すと下のようになります。</p>
+<div class="equation">
+$$\sum_{k=1}^{8}{\alpha_k\ket{l_km_kn_k}}$$
+</div>
+<div class="equation">
+$$(\mbox{ただし、}\;\alpha_1\cdots\alpha_{8}\,は\sum_{k=1}^{8}{|\alpha_k|^2=1}\mbox{を満たす複素数で、}\;l_km_kn_k\in\{0,1\})$$
+</div>
+
+<h2><a id="h2-6"></a><span class="secno">2.6　</span>量子ビットをPythonで</h2>
+
+<h3><a id="h2-6-1"></a>1量子ビット</h3>
+<p>二度目ですが、1量子ビット<span class="equation">\( \ket{\psi} \)</span>は次のように表せます。</p>
+<div class="equation">
+$$    \ket{\psi} = \alpha\ket{0} + \beta\ket{1}\, 
+    (|\alpha|^2+|\beta|^2 = 1,\, \alpha,\beta \in \mathbb{C})$$
+</div>
+<p>従って、<span class="equation">\( (|\alpha|^2+|\beta|^2 = 1,\, \alpha,\beta \in \mathbb{C}) \)</span>を満たす<span class="equation">\( \alpha \)</span>、<span class="equation">\( \beta \)</span>が見つかると1量子ビットが表現できそうです。</p>
+<p><span class="equation">\( (|\alpha|^2+|\beta|^2 = 1,\, \alpha,\beta \in \mathbb{C}) \)</span>を満たす<span class="equation">\( \alpha \)</span>、<span class="equation">\( \beta \)</span>の作り方の一例として、まず、<span class="equation">\( A^2+B^2=1 \)</span>を満たす0以上の実数<span class="equation">\( A \)</span>、<span class="equation">\( B \)</span>の組を求め、その後、<span class="equation">\( |\alpha| = A \)</span>、<span class="equation">\( |\beta| = B \)</span>となる複素数<span class="equation">\( \alpha \)</span>、<span class="equation">\( \beta \)</span>を求める方法があります。</p>
+<p>前半の<span class="equation">\( A^2+B^2=1 \)</span>を満たす0以上の実数<span class="equation">\( A \)</span>、<span class="equation">\( B \)</span>の組を求める方法ですが、筆者の思いついた方法で3つほどあるので紹介します。</p>
+<dl>
+<dt>その1</dt>
+<dd>1つ目は、0以上1以下の乱数<a id="fnb-randnum" href="#fn-randnum" class="noteref" epub:type="noteref">*3</a>を1つ作り、もう片方は1からその数を引いたものとして、それぞれの平方根をとるという面白味もなく一番安直な方法。</dd>
+<dt>その2</dt>
+<dd>2つ目は、「合計に対するその数が占める割合」を求め、それぞれの平方根をとる方法です。例えば、100点満点の数学と国語のテストを受け、数学が75点、国語が85点取ったとします。この時、合計得点に対する数学の点数の割合は<span class="equation">\( \frac{75}{75+85} = 0.46875 \)</span>、<span class="equation">\( \frac{85}{75+85} = 0.53125 \)</span>となります。<span class="equation">\( A = \sqrt{0.46875} \)</span>、<span class="equation">\( A = \sqrt{0.53125} \)</span> とおくと、<span class="equation">\( A^2+B^2=1,(0 \leqq A \leqq 1, 0 \leqq B \leqq 1, A, B \in \mathbb{R}) \)</span>を満たし、適します。一般的に変数<span class="equation">\( a \)</span>、<span class="equation">\( b \)</span>を乱数として、<span class="equation">\( A = \sqrt{\frac{a}{a+b}} \)</span>、<span class="equation">\( B = \sqrt{\frac{a}{a+b}} \)</span>によって<span class="equation">\( A \)</span>、<span class="equation">\( B \)</span>を決めます。すると、<span class="equation">\( A^2+B^2=1,(0 \leqq A \leqq 1, 0 \leqq B \leqq 1, A, B \in \mathbb{R}) \)</span>を満たし、適します。Pythonで書くと「<span class="listref"><a href="./chito.html#random_pairs">リスト2.1</a></span>」のようになります。この方法は量子ビットのビット数が増えてもほとんど同じプログラムで書けるので、今回はこの方法を採用します。</dd>
+<dt>その3</dt>
+<dd>3つ目は、三角関数を利用する方法です。<span class="equation">\( \theta\in\mathbb{R} \)</span>の範囲で<span class="equation">\( \sin^2\theta + \cos^2\theta = 1 \)</span>は常に成り立つので、<span class="equation">\( A = |\sin\theta| \)</span>、<span class="equation">\( |\cos\theta| \)</span>とおくと、<span class="equation">\( A^2+B^2=1 \)</span>が成り立ち、<span class="equation">\( 0 \leqq A \leqq 1, 0 \leqq B \leqq 1, A, B \in \mathbb{R} \)</span>を満たします。この方法は、面白いですが一見すると分かりにくい上に量子ビットが増えた時に応用がきかないので今回は使いません。</dd>
+</dl>
+<div id="random_pairs" class="caption-code">
+<p class="caption">リスト2.1: </p>
+<pre class="list language-python highlight"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">gen</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">default_rng</span><span class="p">()</span> <span class="c1"># 乱数生成機
+</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">gen</span><span class="p">.</span><span class="n">random</span><span class="p">()</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">a</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"A = </span><span class="si">{</span><span class="n">A</span><span class="si">}</span><span class="s">,B = </span><span class="si">{</span><span class="n">B</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"A^2+B^2=</span><span class="si">{</span><span class="n">A</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">B</span><span class="o">**</span><span class="mi">2</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</pre>
+</div>
+<div id="monobitQubit" class="caption-code">
+<p class="caption">リスト2.2: monobitQubit.py</p>
+<pre class="list language-python highlight"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">gen</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">default_rng</span><span class="p">()</span>
+
+<span class="c1"># ランダムな複素数の組を生成
+</span><span class="k">def</span> <span class="nf">generate_random_complex</span><span class="p">(</span><span class="n">norm</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">norm</span><span class="p">)</span>
+    <span class="n">rotate</span> <span class="o">=</span> <span class="n">gen</span><span class="p">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span>
+    <span class="k">return</span> <span class="n">norm</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rotate</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1j</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rotate</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">MonoQubit</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">__probability_complex_amplitude</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">__roulette_table</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">__set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">bit</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">prob_num</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">power</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">bit</span><span class="p">)</span>
+        <span class="n">absset</span> <span class="o">=</span> <span class="n">gen</span><span class="p">.</span><span class="n">random</span><span class="p">(</span><span class="n">prob_num</span><span class="p">)</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">absset</span><span class="o">/</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">absset</span><span class="p">)),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">generate_random_complex</span><span class="p">(</span><span class="n">norm</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__set</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">__probability_complex_amplitude</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">__generate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">__roulette_table</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">__probability_complex_amplitude</span><span class="p">))</span>
+
+    <span class="c1"># 観測
+</span>    <span class="k">def</span> <span class="nf">observe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">gen</span><span class="p">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">__roulette_table</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">QB</span> <span class="o">=</span> <span class="n">MonoQubit</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">QB</span><span class="p">.</span><span class="n">observe</span><span class="p">(),</span><span class="n">end</span><span class="o">=</span><span class="s">","</span><span class="p">)</span>
+</pre>
+</div>
+<p>さて、1量子ビットを作ることができました。1量子ビットを表すオブジェクトを「MonoQubit」クラス、1量子ビットの確率複素振幅を「MonoQubit」クラスのプロパティ「__probability_complex_amplitude」、1量子ビットの状態を観測することを「MonoQUbit」クラスのメソッド「observe」として定義します。</p>
+<p>確率複素振幅は私たちにはみることができないので、プライベートな(インスタンスの外部からはアクセスできない)プロパティとして扱います。</p>
+<div class="column">
+
+<h3><a id="column-1"></a>オブジェクト指向</h3>
+<p>　ところで、ここに出てきた「クラス」「プロパティ」「メソッド」「インスタンス」とはなんなのでしょうか？</p>
+<p>　これらは「オブジェクト指向」(プログラムで表現したいものを「オブジェクト(物)」としてみなすプログラミング方法)でよく使われる用語で、「クラス」「プロパティ」「メソッド」はそれぞれオブジェクトの「設計図」「要素」「機能や動き」を表し、「インスタンス」とは「クラス」をもとに作られた物を指します。</p>
+<p>　例えば、「車」というオブジェクトの場合、車の設計図にあたるのが「クラス」、タイヤやハンドル、エンジンなどにあたるのが「プロパティ」、「アクセルを踏むと前進する」などの動作にあたるのが「メソッド」そして、設計図をもとに実際に作られた車が「インスタンス」になります。</p>
+<p>オブジェクト指向を採用するプログラミング言語の代表的なものとしては、「Python」や「C#」などがあります。</p>
+</div>
+<p>実際に10000回観測してみると下のグラフのような結果になります。</p>
+<div id="observe1" class="image">
+<img src="images/chito/observe1.png" alt="" class="width-080per" />
+<p class="caption">
+図2.2: 
+</p>
+</div>
+
+<h3><a id="h2-6-2"></a>複数量子ビット</h3>
+<p>1量子ビットの場合は2つ状態(<span class="equation">\( \ket{0} \)</span>や<span class="equation">\( \ket{1} \)</span>)とそれぞれの状態に対する2つの確率複素振幅(<span class="equation">\( \alpha \)</span>や<span class="equation">\( \beta \)</span>)を用いて重ね合わせの状態を表すことができます。複数量子ビット場合も同じで<span class="equation">\( n \)</span>ビットの量子ビットの場合、<span class="equation">\( 2^n \)</span>個<a id="fnb-num_of_bit_states" href="#fn-num_of_bit_states" class="noteref" epub:type="noteref">*2</a> の状態とそれぞれの状態に対する<span class="equation">\( 2^n \)</span>個の確率複素振幅を用いて<span class="equation">\( 2^n \)</span>個の重ね合わせの状態を表すことができます。1量子ビットの時と同じように数式で表すと下のようになります。例えば3ビットの量子ビットの場合は上で説明したような式になります。</p>
+<div class="equation">
+$$    \ket{\psi} = c_{00\dots0}\ket{00\dots0} + c_{00\dots1}\ket{00\dots1} + \cdots c_{11\dots1}\ket{11\dots1}\\
+    \mbox{ただし、}(|c_{00\dots0}| + |c_{00\dots1}| + \cdots + |c_{11\dots1}| = 1)$$
+</div>
+<p>実際にPythonで組んでみると、下のようになります。</p>
+
+<h2><a id="h2-7"></a><span class="secno">2.7　</span>量子ゲート</h2>
+<p>量子ゲートとは量子ビットの働く演算のことです。ただ、量子ビットに対する演算は普通のビット(古典ビット）に対する演算とは異なり、量子ビットの状態をコピーするなどの元に戻すことができない演算は不可能であり、回転や折り返しなどの行列の積で表される演算のみが可能となります。そのため、量子ゲートによる演算も行列の積で書くことができます。</p>
+
+<h3><a id="h2-7-1"></a>Xゲート(ビットフリップゲート)</h3>
+<p>X ゲート (ビットフリップゲート) は入力された1量子ビットの <span class="equation">\( \ket{0} \)</span> , <span class="equation">\( \ket{1} \)</span> の確率振幅と位相(<span class="equation">\( \alpha \)</span>, <span class="equation">\( \beta \)</span>)を反転させる操作をするゲートで<span class="eqref"><a href="./chito.html#xgate">式2.1</a></span>のように表されます。</p>
+<p>また、Xゲートによる操作を「ビットフリップ」と呼びます。</p>
+<p>1量子ビット<span class="equation">\( \psi = \alpha\ket{0} + \beta\ket{1} \)</span>に対しての操作は<span class="eqref"><a href="./chito.html#opeXgate">式2.2</a></span>のように表され、<span class="equation">\( \ket{0} \)</span>と<span class="equation">\( \ket{1} \)</span>の位相と確率振幅が入れ替わっているのがわかります。</p>
+<div id="xgate" class="caption-equation">
+<p class="caption">式2.1: </p>
+<div class="equation">
+$$X = 
+\begin{bmatrix}
+0 & 1 \\
+1 & 0 \\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="opeXgate" class="caption-equation">
+<p class="caption">式2.2: </p>
+<div class="equation">
+$$X\ket{\psi} = 
+\begin{bmatrix}
+0 & 1 \\
+1 & 0 \\
+\end{bmatrix}
+\begin{bmatrix}
+\alpha\\
+\beta\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+\beta\\
+\alpha\\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="id_gates_2Ftable_2Fxgate" class="image">
+<img src="images/chito/gates/table/xgate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.3: 
+</p>
+</div>
+
+<h3><a id="h2-7-2"></a>Zゲート (位相フリップゲート)</h3>
+<p>Zゲート(位相フリップゲート)は入力された1量子ビットの<span class="equation">\( \ket{1} \)</span>の位相を反転させる操作を行うゲートで<span class="eqref"><a href="./chito.html#zgate">式2.3</a></span>のように表されます。</p>
+<p>また、Zゲートによる操作を「位相フリップ」と呼びます。</p>
+<p>1量子ビット<span class="equation">\( \psi = \alpha\ket{0} + \beta\ket{1} \)</span>に対しての操作は<span class="eqref"><a href="./chito.html#opeZgate">式2.4</a></span>のように表され、<span class="equation">\( \ket{1} \)</span>の位相が反転しているのがわかります。</p>
+<div id="zgate" class="caption-equation">
+<p class="caption">式2.3: </p>
+<div class="equation">
+$$Z = 
+\begin{bmatrix}
+1 & 0 \\
+0 & -1 \\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="opeZgate" class="caption-equation">
+<p class="caption">式2.4: </p>
+<div class="equation">
+$$Z\ket{\psi} = 
+\begin{bmatrix}
+1 & 0 \\
+0 & -1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\alpha\\
+\beta\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+\alpha\\
+-\beta\\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="id_gates_2Ftable_2Fzgate" class="image">
+<img src="images/chito/gates/table/zgate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.4: 
+</p>
+</div>
+
+<h3><a id="h2-7-3"></a>Hゲート (アダマールゲート)</h3>
+<p>Hゲート(アダマールゲート)は主に重ね合わせの状態を作るときに使われるゲートで<span class="eqref"><a href="./chito.html#hgate">式2.5</a></span>のように表されます。</p>
+<p>1量子ビット<span class="equation">\( \ket{0} \)</span>に対しての操作は<span class="eqref"><a href="./chito.html#opeHgate">式2.6</a></span>のように表され、<span class="equation">\( \ket{0} \)</span>と<span class="equation">\( \ket{1} \)</span>の均等な重ね合わせ状態ができていることがわかります。</p>
+<div id="hgate" class="caption-equation">
+<p class="caption">式2.5: </p>
+<div class="equation">
+$$H = \frac{1}{\sqrt{2}}
+\begin{bmatrix}
+1 & 1 \\
+1 & -1 \\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="opeHgate" class="caption-equation">
+<p class="caption">式2.6: </p>
+<div class="equation">
+$$H\ket{0} = \frac{1}{\sqrt{2}}
+\begin{bmatrix}
+1 & 1 \\
+1 & -1 \\
+\end{bmatrix}
+\begin{bmatrix}
+1\\
+0\\
+\end{bmatrix}
+=
+\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+1\\
+1\\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="id_gates_2Ftable_2Fhgate" class="image">
+<img src="images/chito/gates/table/hgate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.5: 
+</p>
+</div>
+
+<h3><a id="h2-7-4"></a>CNOTゲート</h3>
+<p>XゲートやZゲート、Hゲートなどは1量子ビットに対して作用しましたが、CNOTゲートは2量子ビットに対して作用します。</p>
+<p>入力する量子ビットのうち片方を制御(Control)ビット、もう片方を標的(Target)ビットと呼びます。CNOTゲートは、制御ビットに<span class="equation">\( \ket{0} \)</span>が入力されたら標的ビットには何もせず、制御ビットに<span class="equation">\( \ket{1} \)</span>が、標的ビットにXゲートを作用させるというような働きをします。</p>
+<p>1ビット目を制御ビットにするか、2ビット目を制御ビットにするかで<span class="eqref"><a href="./chito.html#cnotgate1">式2.10</a></span>と<span class="eqref"><a href="./chito.html#cnotgate2">式2.8</a></span>の2通りの表し方があります。制御ビットの状態に応じて標的ビットの作用が変わるのが特徴で、制御ビットが標的ビットを反転させるかどうかのスイッチのような役割を果たします。</p>
+<p>例えば、1ビット目を制御ビット、2ビット目を標的ビットとみなす2量子ビット<span class="equation">\( \ket{10} \)</span>に対する操作は<span class="eqref"><a href="./chito.html#opeCNOTgate">式2.9</a></span>のように表され、制御ビットは変わらず、標的ビットのみ反転していることがわかります。</p>
+<div id="cnotgate1" class="caption-equation">
+<p class="caption">式2.10: </p>
+<div class="equation">
+$$CNOT = 
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & 1 & 0 \\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="cnotgate2" class="caption-equation">
+<p class="caption">式2.8: </p>
+<div class="equation">
+$$CNOT = 
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 \\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="opeCNOTgate" class="caption-equation">
+<p class="caption">式2.9: </p>
+<div class="equation">
+$$CNOT\ket{10} = 
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & 1 & 0 \\
+\end{bmatrix}
+\begin{bmatrix}
+0\\
+1\\
+1\\
+0\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+0\\
+1\\
+0\\
+1\\
+\end{bmatrix}$$
+</div>
+</div>
+
+<h3><a id="h2-7-5"></a>その他ゲート</h3>
+<p>他にもゲートの種類はありますが、全ては説明しきれないので、真理値表<a id="fnb-TFtable" href="#fn-TFtable" class="noteref" epub:type="noteref">*4</a>とそのゲートの行列での表し方をいくつか紹介するだけにします。</p>
+
+<h4><a id="h2-7-5-1"></a>Yゲート</h4>
+<div id="cnotgate1" class="caption-equation">
+<p class="caption">式2.10: </p>
+<div class="equation">
+$$Y= 
+\begin{bmatrix}
+0 & -i\\
+i & 0\\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="id_gates_2Ftable_2Fygate" class="image">
+<img src="images/chito/gates/table/ygate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.6: 
+</p>
+</div>
+
+<h4><a id="h2-7-5-2"></a>Sゲート</h4>
+<div id="cnotgate1" class="caption-equation">
+<p class="caption">式2.10: </p>
+<div class="equation">
+$$S= 
+\begin{bmatrix}
+1 & 0\\
+0 & e^{\frac{i\pi}{2}}\\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="id_gates_2Ftable_2Fsgate" class="image">
+<img src="images/chito/gates/table/sgate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.7: 
+</p>
+</div>
+
+<h4><a id="h2-7-5-3"></a>Tゲート</h4>
+<div id="cnotgate1" class="caption-equation">
+<p class="caption">式2.10: </p>
+<div class="equation">
+$$S= 
+\begin{bmatrix}
+1 & 0\\
+0 & e^{\frac{i\pi}{4}}\\
+\end{bmatrix}$$
+</div>
+</div>
+<div id="id_gates_2Ftable_2Ftgate" class="image">
+<img src="images/chito/gates/table/tgate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.8: 
+</p>
+</div>
+
+<h4><a id="h2-7-5-4"></a>CZゲート</h4>
+<div id="id_gates_2Ftable_2Fczgate" class="image">
+<img src="images/chito/gates/table/czgate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.9: 
+</p>
+</div>
+
+<h4><a id="h2-7-5-5"></a>Toffoliゲート</h4>
+<div id="id_gates_2Ftable_2Ftoffoligate" class="image">
+<img src="images/chito/gates/table/toffoligate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.10: 
+</p>
+</div>
+
+<h4><a id="h2-7-5-6"></a>SWAPゲート</h4>
+<div id="id_gates_2Ftable_2Fswapgate" class="image">
+<img src="images/chito/gates/table/swapgate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.11: 
+</p>
+</div>
+
+<h4><a id="h2-7-5-7"></a>CSゲート</h4>
+<div id="id_gates_2Ftable_2Fcsgate" class="image">
+<img src="images/chito/gates/table/csgate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.12: 
+</p>
+</div>
+
+<h4><a id="h2-7-5-8"></a>Fredkinゲート</h4>
+<div id="id_gates_2Ftable_2Ffredkingate" class="image">
+<img src="images/chito/gates/table/fredkingate.png" alt="" class="width-030per" />
+<p class="caption">
+図2.13: 
+</p>
+</div>
+
+<h2><a id="h2-8"></a><span class="secno">2.8　</span>最後に</h2>
+<p>かなり数学寄りの記事になってしまいましたが、最後まで読んでいただきありがとうございます。結局量子コンピューターがどのような働きをするのか、どう扱えば良いのかは分からずじまいだったかもしれませんが、これを機会に量子コンピューターやプログラミング、数学にも興味を持つ方が一人でも現れると嬉しいです。</p>
+
+<h2><a id="h2-9"></a><span class="secno">2.9　</span>参考文献</h2>
+<ul>
+<li>「（1）量子ってなあに？：文部科学省」<br />(<a href="https://www.mext.go.jp/a_menu/shinkou/ryoushi/detail/1316005.htm" class="link">https://www.mext.go.jp/a_menu/shinkou/ryoushi/detail/1316005.htm</a>)</li>
+<li>「オブジェクト・オリエンテッド・プログラミング・ランゲージ (Object-Oriented Programming Language)とは｜「分かりそう」で「分からない」でも「分かった」気になれるIT用語辞典」(<a href="https://wa3.i-3-i.info/word19329.html" class="link">https://wa3.i-3-i.info/word19329.html</a>)</li>
+</ul>
+<div class="footnote" epub:type="footnote" id="fn-whatisQC"><p class="footnote">[*1] （1）量子ってなあに？：文部科学省 : https://www.mext.go.jp/a_menu/shinkou/ryoushi/detail/1316005.htm</p></div>
+<div class="footnote" epub:type="footnote" id="fn-num_of_bit_states"><p class="footnote">[*2] 例えば、3ビットで表される数値では2進法で000(=0)から111(=7)までの<span class="equation">\( 2^3 \)</span>=8個の状態を表すことができる</p></div>
+<div class="footnote" epub:type="footnote" id="fn-randnum"><p class="footnote">[*3] 字の通りでランダムな数を表す。ただ、コンピュータ上で「本当にランダムな数」を表現することは難しいので、疑似乱数と呼ばれるある程度ランダムに近い規則を持ったアルゴリズムのよって生成される</p></div>
+<div class="footnote" epub:type="footnote" id="fn-TFtable"><p class="footnote">[*4] 入力とそれに対する出力を一対一に対応させた表</p></div>
+      </div>
+      <div class="navs">
+        <nav class="book-navi book-prev">
+                    <a href="dekabutsu.html">
+            <div class="book-cursor"><span class="cursor-prev">◀ TOTPをC#で生成する</span></div>
+          </a>
+                  </nav>
+        <nav class="book-navi book-next">
+                    <a href="maguro.html">
+            <div class="book-cursor"><span class="cursor-next">▶ i3 window managerを使ってみよう</span></div>
+          </a>
+                  </nav>
+      </div>
+    </div>
+  </div>
+  <footer>
+      </footer>
+  <script>
+    (function() {
+      if (!window.katex) { return; }
+      var equations = [].slice.call(document.querySelectorAll(".equation"));
+      for (var i = 0; i < equations.length; i++) {
+        katex.render(equations[i].textContent, equations[i]);
+      }
+    }) ();
+  </script>
+</body>
+</html>
